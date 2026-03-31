@@ -1348,3 +1348,150 @@ https://brightlane.github.io/SameDayFlowers/
   Portland, Boston, Denver, Tucson, Sacramento, Minneapolis, Tampa, Orlando, Kansas City,
   and many more cities.
 </div>
+<!-- ============ AUTO‑INJECTED SEO & DAILY TIPS (AT BOTTOM) ============ -->
+
+<!-- Daily rotating tips JS -->
+<script>
+  // Tips in English, French, Spanish
+  const dailyTips = {
+    en: [
+      "Tip: Order same day flowers early in the morning to maximize the chance of delivery today. <a href=\"http://www.floristone.com/index.cfm?source_id=aff&AffiliateID=2013017799\" target=\"_blank\" style=\"color:#e20613;text-decoration:underline;\">Click here</a> to send flowers now.",
+      "Tip: Same day sympathy or funeral flowers are best ordered with a clear delivery address and time. Use this page to <a href=\"http://www.floristone.com/index.cfm?source_id=aff&AffiliateID=2013017799\" target=\"_blank\" style=\"color:#e20613;text-decoration:underline;\">send flowers online</a> quickly.",
+      "Tip: For birthdays and anniversaries, add a personal note when you order flowers online. <a href=\"http://www.floristone.com/index.cfm?source_id=aff&AffiliateID=2013017799\" target=\"_blank\" style=\"color:#e20613;text-decoration:underline;\">Send flowers now</a> through FloristOne.",
+      "Tip: Valentine’s Day and Mother’s Day sell out fast. Reserve same day flowers early. <a href=\"http://www.floristone.com/index.cfm?source_id=aff&AffiliateID=2013017799\" target=\"_blank\" style=\"color:#e20613;text-decoration:underline;\">Send flowers now</a> from this page.",
+      "Tip: Get‑well flowers brighten hospital rooms. Order same day flowers for Canada and USA. <a href=\"http://www.floristone.com/index.cfm?source_id=aff&AffiliateID=2013017799\" target=\"_blank\" style=\"color:#e20613;text-decoration:underline;\">Send flowers now</a> through FloristOne."
+    ],
+    fr: [
+      "Conseil : Commandez vos fleurs livrées le jour même tôt le matin pour maximiser les chances de livraison aujourd’hui. <a href=\"http://www.floristone.com/index.cfm?source_id=aff&AffiliateID=2013017799\" target=\"_blank\" style=\"color:#e20613;text-decoration:underline;\">Cliquez ici</a> pour envoyer des fleurs maintenant.",
+      "Conseil : Les fleurs de sympathie ou funéraires sont mieux commandées en précisant l’adresse et l’heure de livraison. Utilisez cette page pour <a href=\"http://www.floristone.com/index.cfm?source_id=aff&AffiliateID=2013017799\" target=\"_blank\" style=\"color:#e20613;text-decoration:underline;\">envoyer des fleurs en ligne</a> rapidement.",
+      "Conseil : Pour les anniversaires, ajoutez un message personnalisé lorsque vous commandez des fleurs en ligne. <a href=\"http://www.floristone.com/index.cfm?source_id=aff&AffiliateID=2013017799\" target=\"_blank\" style=\"color:#e20613;text-decoration:underline;\">Envoyez des fleurs maintenant</a> via FloristOne.",
+      "Conseil : La Saint‑Valentin et la fête des Mères sont très prisées. Réservez vos fleurs livrées le jour même à l’avance. <a href=\"http://www.floristone.com/index.cfm?source_id=aff&AffiliateID=2013017799\" target=\"_blank\" style=\"color:#e20613;text-decoration:underline;\">Envoyez des fleurs maintenant</a> depuis cette page.",
+      "Conseil : Les fleurs de rétablissement illuminent les chambres d’hôpital. Commandez des fleurs livrées le jour même pour le Canada et les États‑Unis. <a href=\"http://www.floristone.com/index.cfm?source_id=aff&AffiliateID=2013017799\" target=\"_blank\" style=\"color:#e20613;text-decoration:underline;\">Envoyez des fleurs maintenant</a> via FloristOne."
+    ],
+    es: [
+      "Consejo: Pide flores el mismo día a primera hora para aumentar las posibilidades de entrega hoy. <a href=\"http://www.floristone.com/index.cfm?source_id=aff&AffiliateID=2013017799\" target=\"_blank\" style=\"color:#e20613;text-decoration:underline;\">Haz clic aquí</a> para enviar flores ahora.",
+      "Consejo: Para flores de condolencias o funerarias, es mejor incluir dirección y hora exacta. Usa esta página para <a href=\"http://www.floristone.com/index.cfm?source_id=aff&AffiliateID=2013017799\" target=\"_blank\" style=\"color:#e20613;text-decoration:underline;\">enviar flores en línea</a> rápido.",
+      "Consejo: Para cumpleaños y aniversarios, añade una nota personal al pedir flores en línea. <a href=\"http://www.floristone.com/index.cfm?source_id=aff&AffiliateID=2013017799\" target=\"_blank\" style=\"color:#e20613;text-decoration:underline;\">Envía flores ahora</a> a través de FloristOne.",
+      "Consejo: La demanda aumenta en San Valentín y el Día de la Madre. Reserva tus flores para entrega el mismo día con tiempo. <a href=\"http://www.floristone.com/index.cfm?source_id=aff&AffiliateID=2013017799\" target=\"_blank\" style=\"color:#e20613;text-decoration:underline;\">Envía flores ahora</a> desde esta página.",
+      "Consejo: Las flores de mejoría alegran las salas de hospital. Pide flores el mismo día para Canadá y Estados Unidos. <a href=\"http://www.floristone.com/index.cfm?source_id=aff&AffiliateID=2013017799\" target=\"_blank\" style=\"color:#e20613;text-decoration:underline;\">Envía flores ahora</a> a través de FloristOne."
+    ]
+  };
+
+  function chooseLanguage() {
+    const lang = localStorage.getItem("dailyTipLang");
+    if (lang && ["en", "fr", "es"].includes(lang)) {
+      return lang;
+    }
+    const choices = ["en", "fr", "es"];
+    const random = choices[Math.floor(Math.random() * choices.length)];
+    localStorage.setItem("dailyTipLang", random);
+    return random;
+  }
+
+  function setDailyTip() {
+    const lang = chooseLanguage();
+    const tips = dailyTips[lang];
+    const day = new Date().getDay();
+    const tipIndex = day % tips.length;
+    const el = document.getElementById("daily-tip");
+    if (el) {
+      el.innerHTML = tips[tipIndex];
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", setDailyTip);
+</script>
+
+<!-- NEW SEO BOTTOM BLOCK (auto‑injected by this script at page load) -->
+<div id="seo-bottom-injector" style="display:none;"></div>
+
+<script>
+  // Auto‑inject fresh SEO at the bottom of the page
+  function injectSeoBottom() {
+    const injector = document.getElementById("seo-bottom-injector");
+
+    const now = new Date();
+    const month = now.getMonth();
+    const year = now.getFullYear();
+
+    // Seasonal label built into the SEO
+    let seasonLabel = "Sympathy, funeral, get‑well, birthday, anniversary";
+    if (month === 1 || month === 4 || month === 11) { // Feb, May, Dec vibes
+      seasonLabel = "Valentine’s Day, Mother’s Day, Father’s Day, Christmas, and other big holidays";
+    } else if (month === 8) { // Sept
+      seasonLabel = "Easter, Thanksgiving, New Year’s, and other big holidays";
+    }
+
+    const html = `
+      <section style="padding:24px 16px 32px;background:#f0f4ff;margin-top:32px;">
+        <div class="container" style="max-width:720px;margin:0 auto;">
+          <h3 style="text-align:center;color:#004b98;margin-bottom:12px;font-size:1.3rem;">
+            Same Day Flowers Policy & How to Send Fast
+          </h3>
+          <p style="font-size:0.95rem;color:#666;line-height:1.6;">
+            Same day flowers are subject to availability and cut‑off times in your city. For ${seasonLabel}, 
+            it’s best to order early in the day to ensure same day delivery to Canada and the USA.
+          </p>
+          <p style="font-size:0.95rem;color:#666;line-height:1.6;text-align:center;margin-top:12px;">
+            To send flowers fast, use this page to
+            <a href="http://www.floristone.com/index.cfm?source_id=aff&AffiliateID=2013017799" style="color:#e20613;text-decoration:underline;">
+              send flowers online
+            </a>
+            through FloristOne for delivery to Canada and USA.
+          </p>
+        </div>
+      </section>
+
+      <div style="display:none;">
+        Same day flowers for Canada and the USA in English, French, and Spanish.
+        Send flowers online to Toronto, Vancouver, Montreal, Calgary, Edmonton, Ottawa, Winnipeg,
+        New York, Los Angeles, Chicago, Houston, Phoenix, Philadelphia, San Antonio, San Diego, Dallas,
+        San Jose, Austin, Jacksonville, Fort Worth, Columbus, Charlotte, San Francisco, Seattle,
+        Washington DC, Miami, Atlanta, Detroit, Nashville, Portland, Boston, Denver, Tucson,
+        Sacramento, Minneapolis, Tampa, Orlando, Kansas City, and many more cities.
+      </div>
+
+      <div style="display:none;">
+        Same day flowers for sympathy, funeral, get‑well, birthday, anniversary, Christmas,
+        Mother’s Day, Father’s Day, Valentine’s Day, Easter, Thanksgiving, New Year’s, and all big holidays
+        to Canada and the USA through FloristOne on SendFlowersOnline.
+      </div>
+
+      <div style="display:none;">
+        Same day flowers Canada and USA, send flowers to Toronto, Vancouver, Montreal, Calgary, Edmonton,
+        Ottawa, Winnipeg, New York, Los Angeles, Chicago, Houston, Phoenix, Philadelphia, San Antonio,
+        San Diego, Dallas, San Jose, Austin, Jacksonville, Fort Worth, Columbus, Charlotte, San Francisco,
+        Seattle, Washington DC, Miami, Atlanta, Detroit, Nashville, Portland, Boston, Denver, Tucson,
+        Sacramento, Minneapolis, Tampa, Orlando, Kansas City, and more through FloristOne.
+      </div>
+
+      <div style="display:none;">
+        Share this page: https://brightlane.github.io/SameDayFlowers/
+        for same day flowers to Canada and USA through FloristOne.
+      </div>
+
+      <div style="display:none;">
+        Best same day flowers for sympathy, funeral, get‑well, birthday, anniversary,
+        Christmas, Mother’s Day, Father’s Day, Valentine’s Day, Easter, Thanksgiving, New Year’s,
+        and all big holidays to Canada and the USA. Send flowers online through FloristOne
+        using SendFlowersOnline for delivery to Toronto, Vancouver, Montreal, Calgary, Edmonton,
+        Ottawa, Winnipeg, New York, Los Angeles, Chicago, Houston, Phoenix, Philadelphia,
+        San Antonio, San Diego, Dallas, San Jose, Austin, Jacksonville, Fort Worth, Columbus,
+        Charlotte, San Francisco, Seattle, Washington DC, Miami, Atlanta, Detroit, Nashville,
+        Portland, Boston, Denver, Tucson, Sacramento, Minneapolis, Tampa, Orlando, Kansas City,
+        and many more cities.
+      </div>
+
+      <!-- Hidden “last updated” tracker -->
+      <div style="display:none;">
+        SEO bottom updated automatically on ${now.toDateString()} for Benny “Palmo Kid” Palmarino’s
+        same day flowers Canada and USA page at https://brightlane.github.io/SameDayFlowers/
+        via FloristOne.
+      </div>
+    `;
+
+    injector.insertAdjacentHTML("afterend", html);
+  }
+
+  document.addEventListener("DOMContentLoaded", injectSeoBottom);
+</script>
