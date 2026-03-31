@@ -1,162 +1,128 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Same Day Flowers Delivered Fast – Canada & USA</title>
-<meta name="description" content="Order Same Day Flowers online for birthdays, sympathy, anniversaries, holidays, and more. Fast delivery across the USA & Canada.">
-<meta name="keywords" content="Same Day Flowers, Send Flowers Online, Flowers Online, Same Day Flower Delivery, Flower Delivery USA, Flower Delivery Canada">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Same Day Flowers Online – Fast Delivery Canada & USA</title>
+<meta name="description" content="Order Same Day Flowers online for sympathy, funeral, get-well, birthday, anniversary, or any holiday. Fast flower delivery to Canada & USA through FloristOne." />
+<link rel="canonical" href="https://brightlane.github.io/SameDayFlowers/" />
+<meta property="og:title" content="Same Day Flowers Online – Fast Delivery Canada & USA" />
+<meta property="og:description" content="Send Same Day Flowers online quickly for any occasion. Delivery available to Canada & USA through FloristOne." />
+<meta property="og:image" content="https://brightlane.github.io/SameDayFlowers/hero-landscape.jpg" />
+<meta property="og:url" content="https://brightlane.github.io/SameDayFlowers/" />
 
 <style>
-  body, html { margin:0; padding:0; font-family: Arial,sans-serif; scroll-behavior: smooth; }
-  a { text-decoration:none; color: inherit; }
-  button { cursor:pointer; }
-
-  /* HERO */
-  .hero {
-    position: relative;
-    height: 100vh;
-    width: 100%;
-    background: url('https://images.unsplash.com/photo-1549887533-8f4b2d28c2b3?auto=format&fit=crop&w=1600&q=80') center center / cover no-repeat;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: white;
-    text-align: center;
-  }
-  .hero-overlay {
-    position: absolute;
-    top:0; left:0; right:0; bottom:0;
-    background: rgba(0,0,0,0.4);
-    z-index:1;
-  }
-  .hero-content {
-    position: relative;
-    z-index:2;
-    max-width: 700px;
-    padding: 20px;
-  }
-  .hero h1 { font-size:3rem; margin-bottom:20px; text-shadow:2px 2px 6px rgba(0,0,0,0.6);}
-  .hero button { padding:15px 30px; font-size:1.2rem; background:#ff3366; border:none; color:white; border-radius:5px; transition:0.3s;}
-  .hero button:hover { background:#e60050;}
-
-  /* CONTENT */
-  section { padding:60px 20px; max-width:1000px; margin:0 auto; }
-  h2 { font-size:2.2rem; margin-bottom:20px; }
-  h3 { font-size:1.5rem; margin-bottom:15px; }
-  p, li { font-size:1.1rem; line-height:1.6; }
-  ul { list-style-type: disc; margin-left:20px; }
-
-  /* CITY SECTION */
-  .cities { display:grid; grid-template-columns: repeat(auto-fill,minmax(180px,1fr)); gap:15px; }
-  .cities li { background:#f2f2f2; padding:10px; border-radius:5px; }
-
-  /* FAQ */
-  .faq h3 { margin-top:25px; }
-
-  /* FIXED CTA */
-  .cta-fixed { position:fixed; bottom:20px; right:20px; z-index:100; }
-  .cta-fixed button { padding:15px 25px; font-size:1rem; background:#ff3366; color:white; border:none; border-radius:50px; box-shadow:2px 2px 10px rgba(0,0,0,0.3); }
-
-  /* EXIT POPUP */
-  #exit-popup {
-    display:none;
-    position:fixed; top:0; left:0; width:100%; height:100%;
-    background: rgba(0,0,0,0.7);
-    z-index:9999;
-    justify-content:center; align-items:center;
-  }
-  #exit-popup .popup-content {
-    background:white; padding:30px; max-width:500px; text-align:center; border-radius:10px; color:black;
-  }
-  #exit-popup button { margin-top:20px; background:#ff3366; color:white; padding:10px 20px; border:none; border-radius:5px; font-size:1.1rem; }
+:root {
+  --primary:#004b98;
+  --secondary:#e20613;
+  --light:#f9f9ff;
+  --dark:#121212;
+  --mid:#666;
+  --radius:16px;
+  --gradient:linear-gradient(135deg, #004b98 0%, #e20613 100%);
+  --transition:all 0.3s ease;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:system-ui,sans-serif;background:var(--light);color:var(--dark);line-height:1.6;overflow-x:hidden;}
+a{text-decoration:none;color:inherit;}
+.container{width:min(100%-32px,1100px);margin:0 auto;padding:0 16px;}
+.nav-outer{position:sticky;top:0;z-index:999;background:#fff;box-shadow:0 4px 16px rgba(0,0,0,0.05);}
+.main-nav{display:flex;justify-content:space-between;align-items:center;padding:14px 0;}
+.logo{font-size:1.3rem;font-weight:700;color:var(--primary);}
+.nav-links{display:flex;gap:20px;align-items:center;}
+.nav-links a{font-size:0.9rem;color:var(--mid);font-weight:500;}
+.nav-links a:hover{color:var(--primary);}
+.hero{position:relative;width:100%;height:100vh;background:url('https://brightlane.github.io/SameDayFlowers/hero-landscape.jpg') center/cover no-repeat;display:flex;align-items:center;justify-content:center;color:#fff;text-align:center;}
+.hero::after{content:"";position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.35);}
+.hero-content{position:relative;z-index:2;max-width:700px;}
+.hero h1{font-size:clamp(2rem,6vw,3.2rem);font-weight:800;margin-bottom:12px;line-height:1.2;}
+.hero p{font-size:1.05rem;margin-bottom:16px;opacity:0.95;}
+.mega-cta{display:inline-block;background:var(--secondary);color:#fff;font-weight:700;font-size:1.1rem;padding:14px 32px;border-radius:32px;transition:var(--transition);}
+.mega-cta:hover{transform:translateY(-4px) scale(1.05);box-shadow:0 12px 30px rgba(0,0,0,0.35);}
+.section{padding:40px 16px;background:#f0f4ff;}
+.section h2{font-size:1.8rem;font-weight:700;margin-bottom:16px;color:var(--primary);}
+.section ol, .section ul{margin-left:20px;margin-bottom:16px;}
+.section li{margin-bottom:8px;}
+.faq-block, .seo-block{margin-bottom:24px;}
+.faq-block h3, .seo-block h3{font-size:1.2rem;font-weight:600;margin-bottom:8px;color:var(--primary);}
+footer{padding:32px 16px;background:var(--light);text-align:center;font-size:0.9rem;color:var(--mid);}
 </style>
+
 </head>
 <body>
 
-<!-- HERO -->
-<section class="hero">
-  <div class="hero-overlay"></div>
+<!-- Sticky nav -->
+<div class="nav-outer">
+  <div class="container">
+    <div class="main-nav">
+      <a href="#" class="logo">Same Day Flowers</a>
+      <div class="nav-links">
+        <a href="#hero">Home</a>
+        <a href="#how-to-order">How To</a>
+        <a href="#faq">Help</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Hero section -->
+<section class="hero" id="hero">
   <div class="hero-content">
     <h1>Same Day Flowers Delivered Fast – Canada & USA</h1>
-    <p>Need Same Day Flowers for birthdays, sympathy, anniversaries, or holidays? Order online and send flowers today!</p>
-    <a href="http://www.floristone.com/index.cfm?source_id=aff&AffiliateID=2013017799"><button>ORDER SAME DAY FLOWERS NOW →</button></a>
+    <p>Need Same Day Flowers for sympathy, funeral, get-well, birthday, anniversary, or any holiday? Order online for fast delivery to Canada & USA.</p>
+    <a class="mega-cta" href="http://www.floristone.com/index.cfm?source_id=aff&AffiliateID=2013017799" target="_blank" rel="noopener">ORDER SAME DAY FLOWERS NOW →</a>
   </div>
 </section>
 
-<!-- MAIN CONTENT -->
-<section>
-  <h2>Send Flowers Online for Any Occasion</h2>
-  <p>Order Same Day Flowers for birthdays, sympathy, anniversaries, holidays, or last-minute gifts. Sending flowers online is fast, easy, and reliable.</p>
-  <ul>
-    <li>Same Day birthday flowers</li>
-    <li>Sympathy and funeral flower delivery</li>
-    <li>Romantic flowers and anniversary bouquets</li>
-    <li>Holiday flowers for Mother's Day, Christmas, and more</li>
-    <li>Get well soon and hospital flower delivery</li>
-  </ul>
-</section>
-
-<!-- CITY COVERAGE -->
-<section>
-  <h2>Same Day Flower Delivery in Major Cities</h2>
-  <ul class="cities">
-    <li>New York</li>
-    <li>Los Angeles</li>
-    <li>Chicago</li>
-    <li>Houston</li>
-    <li>Philadelphia</li>
-    <li>Phoenix</li>
-    <li>San Antonio</li>
-    <li>San Diego</li>
-    <li>Dallas</li>
-    <li>Toronto</li>
-    <li>Vancouver</li>
-    <li>Montreal</li>
-  </ul>
-</section>
-
-<!-- FAQ -->
-<section class="faq">
-  <h2>Same Day Flowers FAQ</h2>
-  <h3>How fast can I send Same Day Flowers?</h3>
-  <p>Same Day Flowers can often be delivered within hours depending on location and time of order.</p>
-
-  <h3>Can I send flowers online today?</h3>
-  <p>Yes, order online today for birthdays, sympathy, or other occasions. Fast delivery is available in most cities.</p>
-
-  <h3>Where is Same Day flower delivery available?</h3>
-  <p>Delivery is available across major cities in the USA and Canada.</p>
-</section>
-
-<!-- FIXED CTA BUTTON -->
-<div class="cta-fixed">
-  <a href="http://www.floristone.com/index.cfm?source_id=aff&AffiliateID=2013017799"><button>ORDER SAME DAY FLOWERS NOW →</button></a>
-</div>
-
-<!-- EXIT POPUP -->
-<div id="exit-popup">
-  <div class="popup-content">
-    <h2>Wait! Don’t Leave Without Sending Flowers!</h2>
-    <p>Same Day Flowers can be delivered to your loved ones right now. Don’t miss this opportunity!</p>
-    <a href="http://www.floristone.com/index.cfm?source_id=aff&AffiliateID=2013017799"><button>Send Flowers Now →</button></a>
+<!-- How to order -->
+<section class="section" id="how-to-order">
+  <div class="container">
+    <h2>How to Order Same Day Flowers Fast</h2>
+    <ol>
+      <li><strong>Choose your occasion:</strong> sympathy/funeral, get-well, birthday, anniversary, or holiday.</li>
+      <li><strong>Click the button:</strong> Use the “ORDER SAME DAY FLOWERS NOW” button above or below.</li>
+      <li><strong>Find flowers:</strong> Search or browse for Same Day sympathy, get-well, birthday, or holiday flowers.</li>
+      <li><strong>Enter delivery:</strong> Recipient’s address in Canada or USA, select delivery date.</li>
+      <li><strong>Add a message:</strong> Type a note on the card and complete your order.</li>
+    </ol>
+    <p style="text-align:center;"><a class="mega-cta" href="http://www.floristone.com/index.cfm?source_id=aff&AffiliateID=2013017799" target="_blank" rel="noopener">How to send Same Day Flowers →</a></p>
   </div>
-</div>
+</section>
 
-<script>
-  // EXIT POPUP
-  let exitPopupShown = false;
-  document.addEventListener('mouseout', function(e) {
-    if (!exitPopupShown && e.clientY < 50) {
-      document.getElementById('exit-popup').style.display = 'flex';
-      exitPopupShown = true;
-    }
-  });
+<!-- FAQ section -->
+<section class="section" id="faq">
+  <div class="container">
+    <h2>Common Same Day Flowers Questions</h2>
 
-  document.getElementById('exit-popup').addEventListener('click', function(e){
-    if(e.target.id === 'exit-popup') this.style.display = 'none';
-  });
-</script>
+    <div class="faq-block">
+      <h3>When should I use Same Day sympathy or funeral flowers?</h3>
+      <p>Same Day sympathy and funeral flowers are ideal for expressing condolences, honoring a life, or supporting grieving friends and family.</p>
+    </div>
+
+    <div class="faq-block">
+      <h3>Can I get Same Day flowers fast for get-well?</h3>
+      <p>Yes. Same Day get-well flowers are perfect for hospital visits and recovery. Same-day delivery is available through FloristOne in major cities.</p>
+    </div>
+
+    <div class="seo-block">
+      <h3>Occasions for Same Day Flowers</h3>
+      <ul>
+        <li>Sympathy & funeral flowers</li>
+        <li>Get-well hospital flowers</li>
+        <li>Birthday & anniversary bouquets</li>
+        <li>Romantic flowers for Valentine’s Day</li>
+        <li>Holiday flowers for Christmas, Easter, Mother’s Day</li>
+        <li>Corporate & office delivery</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  Send Flowers Online © 2026 – Helping you order Same Day Flowers fast to Canada & USA through FloristOne.<br>
+  Order via: <a href="http://www.floristone.com/index.cfm?source_id=aff&AffiliateID=2013017799" target="_blank" rel="noopener">FloristOne / Same Day Flowers</a>.
+</footer>
 
 </body>
 </html>
