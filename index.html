@@ -1,159 +1,54 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Send Flowers Online – Same Day Flowers Delivery Canada & USA</title>
-  <meta name="description" content="Need Same Day Flowers for sympathy, funeral, get-well, birthday, anniversary, or any big holiday? Order online for fast delivery to Canada & USA." />
+/* Hero section enhanced with scenic background */
+.hero {
+  position: relative;
+  color: #fff;
+  padding: 80px 16px 120px;
+  text-align: center;
+  background: url('https://brightlane.github.io/SameDayFlowers/hero-landscape-enhanced.jpg') no-repeat center center/cover;
+}
 
-  <!-- Canonical -->
-  <link rel="canonical" href="https://brightlane.github.io/SameDayFlowers/" />
+.hero-overlay {
+  position: absolute;
+  top:0; left:0; width:100%; height:100%;
+  background: rgba(0,0,0,0.35); /* subtle dark overlay for text readability */
+  z-index:1;
+}
 
-  <!-- Open Graph / Social -->
-  <meta property="og:title" content="Send Flowers Online – Same Day Flowers for Sympathy, Funeral, Get-Well & Holidays" />
-  <meta property="og:description" content="Fast Same Day Flower delivery via FloristOne for Canada & USA: sympathy, funeral, get-well, birthday, romance, and holidays." />
-  <meta property="og:url" content="https://brightlane.github.io/SameDayFlowers/" />
-  <meta property="og:type" content="website" />
-  <meta property="og:image" content="https://brightlane.github.io/SameDayFlowers/og-flower.jpg" />
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Send Flowers Online – Same Day Flowers Delivery" />
-  <meta name="twitter:description" content="Fast Same Day Flower delivery via FloristOne for Canada & USA." />
-  <meta name="twitter:image" content="https://brightlane.github.io/SameDayFlowers/og-flower.jpg" />
+.hero .container {
+  position: relative;
+  z-index:2;
+}
 
-  <style>
-    :root {
-      --primary: #004b98;
-      --secondary: #e20613;
-      --light: #f9f9ff;
-      --dark: #121212;
-      --mid: #666;
-      --radius: 16px;
-      --gradient: linear-gradient(135deg, rgba(0,75,152,0.8) 0%, rgba(226,6,19,0.8) 100%);
-      --transition: all 0.3s ease;
-    }
+.hero h1 {
+  font-size: clamp(2rem,6vw,3rem);
+  font-weight:800;
+  margin-bottom:12px;
+  line-height:1.2;
+  text-shadow: 1px 1px 6px rgba(0,0,0,0.5);
+}
 
-    * { box-sizing: border-box; margin:0; padding:0; }
-    body { font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; line-height:1.6; color:var(--dark); background:var(--light); }
-    a { text-decoration:none; color:inherit; }
+.hero p {
+  font-size:1.05rem;
+  max-width:700px;
+  margin:0 auto 16px;
+  opacity:0.95;
+  text-shadow: 1px 1px 6px rgba(0,0,0,0.4);
+}
 
-    .container { width:min(100% - 32px, 1100px); margin:0 auto; padding:0 16px; }
-
-    /* Hero section */
-    .hero {
-      position: relative;
-      background: url('https://images.unsplash.com/photo-1606761563173-f334d4f8b226?auto=format&fit=crop&w=1500&q=80') center/cover no-repeat;
-      color: #fff;
-      text-align: center;
-      padding: 80px 16px 120px;
-    }
-    .hero::before {
-      content:"";
-      position:absolute;
-      top:0; left:0; width:100%; height:100%;
-      background: var(--gradient);
-      opacity:0.9;
-      z-index:0;
-    }
-    .hero-content { position: relative; z-index:1; }
-    .hero h1 { font-size:clamp(2rem,6vw,3.2rem); font-weight:800; margin-bottom:12px; line-height:1.2; }
-    .hero p { font-size:1.05rem; max-width:700px; margin:0 auto 16px; opacity:0.95; }
-    .hero .mega-cta {
-      display:inline-block;
-      background:#fff;
-      color:var(--primary);
-      font-weight:700;
-      font-size:1.1rem;
-      padding:14px 32px;
-      border-radius:32px;
-      text-transform:uppercase;
-      margin-top:16px;
-      transition:var(--transition);
-    }
-    .hero .mega-cta:hover { transform:translateY(-3px) scale(1.04); }
-
-    /* Sections */
-    section { padding:40px 16px; }
-    #rotating, #related { background:#f0f4ff; text-align:center; border-radius:var(--radius); margin-bottom:16px; }
-    h2, h3 { color:var(--primary); margin-bottom:12px; }
-
-    ol, ul { margin-left:20px; margin-bottom:16px; }
-    li { margin-bottom:6px; }
-
-    /* Footer */
-    footer { background:#f9f9ff; padding:32px 16px; text-align:center; font-size:0.9rem; color:var(--mid); }
-
-    /* Buttons inside content */
-    .btn { display:inline-block; background:var(--secondary); color:#fff; padding:10px 24px; border-radius:24px; font-weight:600; transition:var(--transition); }
-    .btn:hover { transform:translateY(-2px); }
-  </style>
-</head>
-
-<body>
-
-  <!-- Hero -->
-  <section class="hero">
-    <div class="hero-content container">
-      <h1>Same Day Flowers Delivered Fast – Canada & USA</h1>
-      <p>Need Same Day Flowers for sympathy, funeral, get-well, birthday, anniversary, or any big holiday? Order online for fast delivery to Canada & USA.</p>
-      <a href="http://www.floristone.com/index.cfm?source_id=aff&AffiliateID=2013017799" target="_blank" class="mega-cta">ORDER SAME DAY FLOWERS NOW →</a>
-    </div>
-  </section>
-
-  <!-- Rotating message / CTA -->
-  <section id="rotating">
-    <div class="container">
-      <p>Need flowers for a funeral?</p>
-      <a href="http://www.floristone.com/index.cfm?source_id=aff&AffiliateID=2013017799" class="btn" target="_blank">Click here to send Same Day Flowers now</a>
-    </div>
-  </section>
-
-  <!-- How to order -->
-  <section>
-    <div class="container">
-      <h2>How to Order Same Day Flowers Fast</h2>
-      <ol>
-        <li><strong>Choose your occasion:</strong> sympathy/funeral, get-well, birthday, anniversary, or holiday.</li>
-        <li><strong>Click the button:</strong> Use the “ORDER SAME DAY FLOWERS NOW” button above or below.</li>
-        <li><strong>Find flowers:</strong> Search or browse for Same Day sympathy, get-well, birthday, or holiday flowers.</li>
-        <li><strong>Enter delivery:</strong> Recipient’s address in Canada or USA, select delivery date.</li>
-        <li><strong>Add a message:</strong> Type a note on the card and complete your order.</li>
-      </ol>
-      <p style="text-align:center;"><a href="http://www.floristone.com/index.cfm?source_id=aff&AffiliateID=2013017799" class="btn" target="_blank">How to send Same Day Flowers →</a></p>
-    </div>
-  </section>
-
-  <!-- FAQ -->
-  <section>
-    <div class="container">
-      <h2>Common Same Day Flowers Questions</h2>
-      <h3>When should I use Same Day sympathy or funeral flowers?</h3>
-      <p>Same Day sympathy and funeral flowers are ideal for expressing condolences, honoring a life, or supporting grieving friends and family.</p>
-
-      <h3>Can I get Same Day flowers fast for get-well?</h3>
-      <p>Yes. Same Day get-well flowers are perfect for hospital visits and recovery. Same-day delivery is available through FloristOne in major cities.</p>
-    </div>
-  </section>
-
-  <!-- Occasions -->
-  <section>
-    <div class="container">
-      <h2>Occasions for Same Day Flowers</h2>
-      <ul>
-        <li>Sympathy & funeral flowers</li>
-        <li>Get-well hospital flowers</li>
-        <li>Birthday & anniversary bouquets</li>
-        <li>Romantic flowers for Valentine’s Day</li>
-        <li>Holiday flowers for Christmas, Easter, Mother’s Day</li>
-        <li>Corporate & office delivery</li>
-      </ul>
-    </div>
-  </section>
-
-  <!-- Footer -->
-  <footer>
-    Send Flowers Online © 2026 – Helping you order Same Day Flowers fast to Canada & USA through FloristOne.<br>
-    Order via: <a href="http://www.floristone.com/index.cfm?source_id=aff&AffiliateID=2013017799" target="_blank">FloristOne / Same Day Flowers</a>
-  </footer>
-
-</body>
-</html>
+.mega-cta {
+  display:inline-block;
+  background:#fff;
+  color:var(--primary);
+  font-weight:700;
+  font-size:1.1rem;
+  padding:14px 32px;
+  border-radius:32px;
+  box-shadow:0 10px 30px rgba(0,75,152,0.35);
+  text-transform:uppercase;
+  margin-top:16px;
+  transition:var(--transition);
+}
+.mega-cta:hover {
+  transform:translateY(-4px) scale(1.04);
+  box-shadow:0 16px 40px rgba(0,75,152,0.45);
+}
