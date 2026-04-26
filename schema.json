@@ -1,0 +1,21 @@
+{
+  "@context": "https://schema.org",
+  "@type": "FlowerShop",
+  "name": "Same Day Flowers",
+  "url": "https://brightlane.github.io/SameDayFlowers/",
+  "logo": "https://brightlane.github.io/SameDayFlowers/logo.png",
+  "description": "Premium same-day flower delivery across USA and Canada. Hand-delivered by local florists.",
+  "potentialAction": {
+    "@type": "OrderAction",
+    "target": "https://www.floristone.com/index.cfm?source_id=aff&AffiliateID=2013017799",
+    "deliveryMethod": "http://purl.org/goodrelations/v1#DeliveryModeDirectOutbound"
+  },
+  "areaServed": ["US", "CA"],
+  "offers": {
+    "@type": "Offer",
+    "itemOffered": {
+      "@type": "Service",
+      "name": "Same Day Flower Delivery"
+    }
+  }
+}
