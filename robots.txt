@@ -1,0 +1,12 @@
+User-agent: *
+Allow: /
+
+# Directives for major search engines
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+# Sitemap location
+Sitemap: https://brightlane.github.io/SameDayFlowers/sitemap.xml
