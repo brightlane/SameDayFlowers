@@ -1,0 +1,90 @@
+name: Flower Power Daily Matrix
+
+on:
+  schedule:
+    - cron: "0 9 * * *" # Runs at 9:00 AM daily
+  workflow_dispatch: {} # Manual "Run" button
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-broadcast:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Generate High-Velocity Content
+        run: |
+          # 1. Topic & FAQ Arrays
+          TOPICS=("Luxury Floral Arrangements" "Last-Minute Sympathy Flowers" "The Science of Bloom Freshness" "Same-Day Delivery Logistics")
+          SELECTED_TOPIC=${TOPICS[$RANDOM % ${#TOPICS[@]}]}
+          
+          # Quora-style Question/Answer Database
+          QUESTIONS=(
+            "How can I ensure flowers are delivered today?|Simply order through FloristOne before 1 PM local time."
+            "Is same-day flower delivery worth the cost?|Absolutely, especially when you need a fresh, hand-delivered gesture instantly."
+            "What are the best flowers for a sudden anniversary?|Red roses and lilies are top-tier choices for immediate impact."
+            "Does FloristOne deliver to rural areas?|Yes, our network of over 20,000 local florists covers the USA and Canada extensively."
+            "Can I add a personalized message to my order?|Every hand-delivered bouquet includes a card for your custom note."
+          )
+
+          # 2. Build the HTML with 10,000-word potential structure
+          cat > blog.html << EOF
+          <!DOCTYPE html>
+          <html lang="en">
+          <head>
+            <meta charset="UTF-8">
+            <title>Same Day Flowers - $SELECTED_TOPIC</title>
+            <style>
+              body { font-family: 'Segoe UI', sans-serif; line-height: 1.8; max-width: 900px; margin: auto; padding: 30px; background: #fffcfd; color: #333; }
+              .cta-button { background: #e91e63; color: white; padding: 20px 40px; text-decoration: none; border-radius: 50px; font-weight: bold; display: inline-block; margin: 20px 0; }
+              .quora-section { background: #f7f7f7; border-left: 4px solid #b92b27; padding: 20px; margin-top: 40px; }
+              .qa-item { margin-bottom: 25px; border-bottom: 1px solid #ddd; padding-bottom: 10px; }
+              .qa-item strong { color: #b92b27; }
+              h1, h2 { color: #ad1457; }
+            </style>
+          </head>
+          <body>
+            <h1>$SELECTED_TOPIC: The 2026 Same-Day Delivery Guide</h1>
+            <p>Welcome to the ultimate resource for sending fresh blooms. Today we are focusing on <strong>$SELECTED_TOPIC</strong>...</p>
+            
+            <div style="text-align:center;">
+              <a href="https://www.floristone.com/index.cfm?source_id=aff&AffiliateID=2013017799" class="cta-button">Order Today's Fresh Selection Now</a>
+            </div>
+
+            <h2>Expert Q&A - Featured on Quora & Beyond</h2>
+            <div class="quora-section">
+          EOF
+
+          # 3. Loop to inject Quora Questions
+          for i in {1..10}; do
+            RAW=${QUESTIONS[$RANDOM % ${#QUESTIONS[@]}]}
+            Q=$(echo \$RAW | cut -d'|' -f1)
+            A=$(echo \$RAW | cut -d'|' -f2)
+            echo "<div class='qa-item'><strong>Q: $Q</strong><br><em>A: $A</em></div>" >> blog.html
+          done
+
+          echo "</div><footer><p>&copy; 2026 Same Day Flowers. Built for speed and freshness.</p></footer></body></html>" >> blog.html
+
+      - name: Commit Content
+        run: |
+          git config user.name "SocialBot"
+          git config user.email "bot@brightlane.dev"
+          git add blog.html
+          git commit -m "Daily Matrix Update: $SELECTED_TOPIC" || echo "No changes"
+          git push
+
+      - name: Social Media Hook
+        run: |
+          # This sends the update to a webhook (Connect this to Zapier, n8n, or Postiz)
+          # It includes the Quora-style question for social engagement
+          curl -X POST ${{ secrets.SOCIAL_WEBHOOK_URL }} \
+          -H "Content-Type: application/json" \
+          -d "{
+            \"title\": \"New Flower Delivery Guide: $SELECTED_TOPIC\",
+            \"link\": \"https://brightlane.github.io/SameDayFlowers/blog.html\",
+            \"social_caption\": \"Sending flowers today? Check out our latest guide and Quora Q&A! #SameDayFlowers #GiftIdeas\",
+            \"affiliate_link\": \"https://www.floristone.com/index.cfm?source_id=aff&AffiliateID=2013017799\"
+          }" || echo "Webhook not configured, skipping social post."
