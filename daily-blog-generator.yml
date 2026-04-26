@@ -1,0 +1,68 @@
+name: Daily Blog Generator (Expansion Mode)
+
+on:
+  schedule:
+    - cron: "0 9 * * *"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  generate-blog:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Generate Programmatic Content
+        run: |
+          # Array of deep-content topics to reach high word counts
+          TOPICS=(
+            "The Psychology of Floral Colors and Emotions"
+            "The Logistics of 24-Hour Floral Supply Chains"
+            "A History of Flower Giving from Victorian Times to 2026"
+            "Sustainable Floristry: How Local Delivery Reduces Carbon"
+          )
+          SELECTED_TOPIC=${TOPICS[$RANDOM % ${#TOPICS[@]}]}
+          
+          cat > blog.html << EOF
+          <!DOCTYPE html>
+          <html>
+          <head>
+            <title>Same Day Flowers - $SELECTED_TOPIC</title>
+            <style>
+              body { font-family: sans-serif; line-height: 1.6; max-width: 800px; margin: auto; padding: 20px; background: #fffafb; }
+              .hero { text-align: center; padding: 50px; background: #ffebee; border-radius: 15px; }
+              .cta { background: #d81b60; color: white; padding: 20px; text-decoration: none; display: inline-block; border-radius: 5px; font-weight: bold; }
+              .content-body { font-size: 18px; color: #444; }
+            </style>
+          </head>
+          <body>
+            <div class="hero">
+              <h1>$SELECTED_TOPIC</h1>
+              <p>Expertly curated flowers delivered today across the USA and Canada.</p>
+              <a href="https://www.floristone.com/index.cfm?source_id=aff&AffiliateID=2013017799" class="cta">Order Same Day Flowers Now</a>
+            </div>
+
+            <div class="content-body">
+              <h2>Why Speed Matters in 2026</h2>
+              <p>In the modern era, the gap between a thought and an action is closing. When you think of a loved one, sending flowers via <strong>FloristOne</strong> ensures that your gesture arrives while the feeling is still fresh...</p>
+              <p>Insert deep content here for $SELECTED_TOPIC...</p>
+            </div>
+
+            <footer>
+              <hr>
+              <p>Affiliate Partner: FloristOne | Delivery available in all major cities.</p>
+            </footer>
+          </body>
+          </html>
+          EOF
+
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add blog.html
+          git commit -m "Programmatic Update: $SELECTED_TOPIC" || echo "No changes"
+          git push
