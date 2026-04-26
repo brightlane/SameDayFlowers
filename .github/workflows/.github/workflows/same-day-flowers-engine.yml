@@ -1,0 +1,57 @@
+name: Same Day Flowers Engine
+
+on:
+  schedule:
+    - cron: "0 9 * * *" # Daily at 9:00 AM
+  workflow_dispatch: {} # Manual Run Button
+
+permissions:
+  contents: write
+
+jobs:
+  run-matrix:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Update Programmatic SEO Pages
+        run: |
+          # 1. Topic Selection
+          TOPICS=("Last Minute Birthday Bouquets" "Same Day Sympathy Flowers" "Express Anniversary Roses" "Hand-Delivered Get Well Gifts")
+          SELECTED_TOPIC=${TOPICS[$RANDOM % ${#TOPICS[@]}]}
+          
+          # 2. Define Shared Footer
+          FOOTER="<footer style='margin-top:50px; padding:20px; border-top:1px solid #ddd; text-align:center; font-family:sans-serif;'>
+            <nav>
+              <a href='index.html'>Home</a> | 
+              <a href='blog.html'>Daily Blog</a> | 
+              <a href='faq.html'>FAQ</a> | 
+              <a href='sitemap.xml'>Sitemap</a>
+            </nav>
+            <p>👉 <a href='https://www.floristone.com/index.cfm?source_id=aff&AffiliateID=2013017799'><strong>Order Same-Day Flowers via FloristOne</strong></a></p>
+          </footer>"
+
+          # 3. Generate Daily blog.html
+          cat > blog.html << EOF
+          <!DOCTYPE html>
+          <html>
+          <head>
+            <title>Same Day Flowers - $SELECTED_TOPIC</title>
+            <style>body{font-family:sans-serif; line-height:1.6; max-width:800px; margin:auto; padding:20px;}</style>
+          </head>
+          <body>
+            <h1>$SELECTED_TOPIC: 2026 Delivery Guide</h1>
+            <p>Our daily update focuses on how to get fresh blooms to your destination in hours...</p>
+            $FOOTER
+          </body>
+          </html>
+          EOF
+
+      - name: Commit and Push Changes
+        run: |
+          git config user.name "FlowerEngineBot"
+          git config user.email "bot@brightlane.dev"
+          git add blog.html
+          git commit -m "Engine Update: $SELECTED_TOPIC" || echo "No changes to commit"
+          git push
