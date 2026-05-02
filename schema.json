@@ -1,18 +1,26 @@
 {
   "@context": "https://schema.org",
-  "@type": "FlowerShop",
-  "name": "Same Day Flowers",
+  "@type": "Florist",
+  "name": "SameDayFlowers via Floristone",
   "url": "https://brightlane.github.io/SameDayFlowers/",
-  "logo": "https://brightlane.github.io/SameDayFlowers/logo.png",
-  "description": "Premium same-day flower delivery across USA and Canada. Hand-delivered by local florists.",
+  "description": "Same day flower delivery across USA and Canada. Free delivery, $0 service fees, from $29.99. 4.8 stars from 18,742 customers.",
+  "areaServed": ["US", "CA"],
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "4.8",
+    "reviewCount": "18742",
+    "bestRating": "5"
+  },
   "potentialAction": {
     "@type": "OrderAction",
-    "target": "https://www.floristone.com/index.cfm?source_id=aff&AffiliateID=2013017799",
+    "target": "https://www.floristone.com/main.cfm?occ=md&source_id=aff&AffiliateID=21885",
     "deliveryMethod": "http://purl.org/goodrelations/v1#DeliveryModeDirectOutbound"
   },
-  "areaServed": ["US", "CA"],
   "offers": {
     "@type": "Offer",
+    "priceCurrency": "USD",
+    "price": "29.99",
+    "availability": "https://schema.org/InStock",
     "itemOffered": {
       "@type": "Service",
       "name": "Same Day Flower Delivery"
