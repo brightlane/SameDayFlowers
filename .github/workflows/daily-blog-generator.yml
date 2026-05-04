@@ -1,66 +1,83 @@
-name: Same Day Flowers Daily Engine
+name: Vulture 10K Daily Engine
+
 on:
   schedule:
-    - cron: "0 9 * * *"
-  workflow_dispatch: {}
+    - cron: "0 9 * * *" # Daily at 9:00 AM
+  workflow_dispatch: # Manual "Go" Button
 
 permissions:
   contents: write
 
 jobs:
-  build-and-broadcast:
+  run-vulture-matrix:
     runs-on: ubuntu-latest
-    timeout-minutes: 60
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
-      - name: Setup Python
+      - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.10'
+          cache: 'pip'
 
-      - name: Git config
+      - name: Install Dependencies
         run: |
-          git config user.name "FlowerEngineBot"
-          git config user.email "bot@brightlane.dev"
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          pip install requests # Hard-coded safety for IndexNow scripts
 
-      - name: Pull latest
+      - name: Update Daily Assets
         run: |
-          git fetch origin main
-          git reset --hard origin/main
+          # 1. Topic Selection for Index Velocity
+          TOPICS=("Last Minute Birthday Bouquets" "Same Day Sympathy Flowers" "Express Anniversary Roses" "Hand-Delivered Get Well Gifts" "Mother's Day Panic Window 2026")
+          SELECTED_TOPIC="${TOPICS[$RANDOM % ${#TOPICS[@]}]}"
+          echo "SELECTED_TOPIC=$SELECTED_TOPIC" >> $GITHUB_ENV
+          
+          # 2. Define Shared Footer with CORRECT Affiliate ID: 2013017799
+          FOOTER="<footer style='margin-top:50px; padding:20px; border-top:1px solid #ddd; text-align:center; font-family:sans-serif;'>
+            <nav>
+              <a href='index.html'>Home</a> | 
+              <a href='blog.html'>Daily Blog</a> | 
+              <a href='faq.html'>FAQ</a> | 
+              <a href='sitemap.xml'>Sitemap</a> |
+              <a href='llms.txt'>AI Context</a>
+            </nav>
+            <p>👉 <a href='https://www.floristone.com/main.cfm?occ=md&source_id=aff&AffiliateID=2013017799'><strong>Order Same-Day Flowers via FloristOne</strong></a></p>
+          </footer>"
 
-      - name: Generate daily blog post
-        run: python3 daily-generator.py
+          # 3. Generate Daily blog.html
+          cat > blog.html << EOF
+          <!DOCTYPE html>
+          <html>
+          <head>
+            <title>Same Day Flowers - $SELECTED_TOPIC</title>
+            <style>body{font-family:sans-serif; line-height:1.6; max-width:800px; margin:auto; padding:20px;}</style>
+          </head>
+          <body>
+            <h1>$SELECTED_TOPIC: 2026 Delivery Guide</h1>
+            <p>Our daily update for $(date +'%Y-%m-%d') focuses on securing premium, hand-delivered blooms. Fast fulfillment is critical for $SELECTED_TOPIC.</p>
+            $FOOTER
+          </body>
+          </html>
+          EOF
 
-      - name: Run multilingual Bing blast
-        run: python3 sdf_bing_blast.py
-
-      - name: Commit and push
+      - name: Execute Vulture Core Scripts
         run: |
+          # Only runs scripts if they exist in the current repo
+          if [ -f vulture_generator.py ]; then python vulture_generator.py; fi
+          if [ -f generate_llms_txt.py ]; then python generate_llms_txt.py; fi
+          if [ -f sdf_bing_blast.py ]; then python sdf_bing_blast.py; fi
+          if [ -f blast_to_bing.py ]; then python blast_to_bing.py; fi
+
+      - name: Commit and Push Changes
+        run: |
+          git config user.name "Vulture-Bot"
+          git config user.email "actions@github.com"
           git add .
-          git diff --staged --quiet && echo "Nothing to commit" && exit 0
-          git commit -m "Daily Engine Update [$(date +'%Y-%m-%d')]"
-          git fetch origin main
-          if git rebase -X theirs origin/main; then
-            git push origin main && exit 0
-          fi
-          git rebase --abort || true
-          git reset --hard origin/main
-          git add .
-          git diff --staged --quiet && exit 0
-          git commit -m "Daily Engine Update (retry) [$(date +'%Y-%m-%d')]"
-          git push origin main
-
-      - name: Social webhook (optional)
-        run: |
-          if [ -n "${{ secrets.SOCIAL_WEBHOOK_URL }}" ]; then
-            curl -s -X POST "${{ secrets.SOCIAL_WEBHOOK_URL }}" \
-            -H "Content-Type: application/json" \
-            -d '{"title":"Same Day Flowers — Free Delivery Today","link":"https://brightlane.github.io/SameDayFlowers/","affiliate_link":"https://www.floristone.com/main.cfm?occ=md&source_id=aff&AffiliateID=21885"}' \
-            && echo "Webhook sent" || echo "Webhook failed — no action needed"
+          if [ -n "$(git status --porcelain)" ]; then
+            git commit -m "Vulture Engine Sync: $SELECTED_TOPIC"
+            git push
           else
-            echo "No webhook configured, skipping"
+            echo "No changes detected."
           fi
