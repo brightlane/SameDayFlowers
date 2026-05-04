@@ -1,29 +1,62 @@
 {
   "@context": "https://schema.org",
   "@type": "Florist",
-  "name": "SameDayFlowers via Floristone",
+  "name": "SameDayFlowers",
   "url": "https://brightlane.github.io/SameDayFlowers/",
-  "description": "Same day flower delivery across USA and Canada. Free delivery, $0 service fees, from $29.99. 4.8 stars from 18,742 customers.",
-  "areaServed": ["US", "CA"],
+  "logo": "https://brightlane.github.io/SameDayFlowers/logo.png",
+  "image": "https://brightlane.github.io/SameDayFlowers/featured-flower.jpg",
+  "description": "Premium same-day flower delivery across the USA and Canada. Enjoy free delivery and $0 service fees starting from $29.99. Highly rated by over 18,000 customers.",
+  "telephone": "+1-800-FLORIST",
+  "priceRange": "$$",
+  "address": {
+    "@type": "PostalAddress",
+    "addressCountry": "US"
+  },
+  "areaServed": [
+    {
+      "@type": "Country",
+      "name": "US"
+    },
+    {
+      "@type": "Country",
+      "name": "CA"
+    }
+  ],
   "aggregateRating": {
     "@type": "AggregateRating",
     "ratingValue": "4.8",
     "reviewCount": "18742",
-    "bestRating": "5"
+    "bestRating": "5",
+    "worstRating": "1"
+  },
+  "provider": {
+    "@type": "Organization",
+    "name": "Floristone",
+    "url": "https://www.floristone.com"
+  },
+  "offers": {
+    "@type": "AggregateOffer",
+    "lowPrice": "29.99",
+    "highPrice": "150.00",
+    "priceCurrency": "USD",
+    "offerCount": "100",
+    "availability": "https://schema.org/InStock",
+    "seller": {
+      "@type": "Organization",
+      "name": "SameDayFlowers"
+    }
   },
   "potentialAction": {
     "@type": "OrderAction",
-    "target": "https://www.floristone.com/main.cfm?occ=md&source_id=aff&AffiliateID=21885",
+    "target": {
+      "@type": "EntryPoint",
+      "urlTemplate": "https://www.floristone.com/main.cfm?occ=md&source_id=aff&AffiliateID=21885",
+      "inLanguage": "en-US",
+      "actionPlatform": [
+        "http://schema.org/DesktopWebPlatform",
+        "http://schema.org/MobileWebPlatform"
+      ]
+    },
     "deliveryMethod": "http://purl.org/goodrelations/v1#DeliveryModeDirectOutbound"
-  },
-  "offers": {
-    "@type": "Offer",
-    "priceCurrency": "USD",
-    "price": "29.99",
-    "availability": "https://schema.org/InStock",
-    "itemOffered": {
-      "@type": "Service",
-      "name": "Same Day Flower Delivery"
-    }
   }
 }
