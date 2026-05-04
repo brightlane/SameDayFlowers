@@ -1,46 +1,31 @@
 name: Same Day Flowers Daily Engine
 
 on:
-  schedule:
-    - cron: '0 5 * * *'
   workflow_dispatch:
-
-permissions:
-  contents: write
+  schedule:
+    - cron: '0 * * * *'  # runs every hour (adjust if needed)
 
 jobs:
   build-and-broadcast:
     runs-on: ubuntu-latest
-    
+
     steps:
-      - name: Checkout Repository
+      # 1. Checkout your repo
+      - name: Checkout code
         uses: actions/checkout@v4
 
+      # 2. Set up Python
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.10'
+          python-version: '3.11'
 
-      - name: Install and Execute
+      # 3. Install dependencies
+      - name: Install dependencies
         run: |
-          # Use 'python -m' to ensure we target the Action's Python instance
           python -m pip install --upgrade pip
-          python -m pip install requests
-          
-          # Run the generator
-          python vulture_generator.py
-          
-          # Run the blast (Note: we use 'python', NOT 'python3')
-          python sdf_bing_blast.py
+          pip install requests
 
-      - name: Commit and Push Changes
-        run: |
-          git config --global user.name "Vulture-Bot"
-          git config --global user.email "actions@github.com"
-          git add .
-          if [ -n "$(git status --porcelain)" ]; then
-            git commit -m "Vulture Engine Update [$(date +'%Y-%m-%d')]"
-            git push
-          else
-            echo "No changes to commit"
-          fi
+      # 4. Run your script
+      - name: Run script
+        run: python sdf_bing_blast.py
