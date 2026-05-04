@@ -1,31 +1,51 @@
-name: Same Day Flowers Daily Engine
+name: Vulture 10K Daily Engine
 
 on:
-  workflow_dispatch:
   schedule:
-    - cron: '0 * * * *'  # runs every hour (adjust if needed)
+    - cron: '0 5 * * *' # Automated daily run
+  workflow_dispatch: # Manual "Go Go Go" button
+
+permissions:
+  contents: write
 
 jobs:
-  build-and-broadcast:
+  execute-vulture-protocol:
     runs-on: ubuntu-latest
-
+    
     steps:
-      # 1. Checkout your repo
-      - name: Checkout code
+      - name: Checkout Repository
         uses: actions/checkout@v4
 
-      # 2. Set up Python
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: '3.10'
+          cache: 'pip'
 
-      # 3. Install dependencies
-      - name: Install dependencies
+      - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install requests
+          # This line makes it function across all repos:
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          # Force install requests just in case requirements.txt is missing
+          pip install requests 
 
-      # 4. Run your script
-      - name: Run script
-        run: python sdf_bing_blast.py
+      - name: Run Vulture Core
+        run: |
+          # Use 'python' for environment consistency
+          if [ -f vulture_generator.py ]; then python vulture_generator.py; fi
+          if [ -f sdf_bing_blast.py ]; then python sdf_bing_blast.py; fi
+          # If other repos use different script names, add them here:
+          if [ -f blast_to_bing.py ]; then python blast_to_bing.py; fi
+
+      - name: Sync and Push
+        run: |
+          git config --global user.name "Vulture-Bot"
+          git config --global user.email "actions@github.com"
+          git add .
+          if [ -n "$(git status --porcelain)" ]; then
+            git commit -m "Vulture Engine Sync: $(date +'%Y-%m-%d')"
+            git push
+          else
+            echo "No changes detected."
+          fi
