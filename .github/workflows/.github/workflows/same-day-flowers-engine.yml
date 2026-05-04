@@ -1,35 +1,49 @@
-name: Same Day Flowers Engine
+name: Vulture 10K Daily Engine
 
 on:
   schedule:
     - cron: "0 9 * * *" # Daily at 9:00 AM
-  workflow_dispatch: {} # Manual Run Button
+  workflow_dispatch: # Manual "Go" Button
 
 permissions:
   contents: write
 
 jobs:
-  run-matrix:
+  run-vulture-matrix:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Update Programmatic SEO Pages
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+          cache: 'pip'
+
+      - name: Install Dependencies
         run: |
-          # 1. Topic Selection
-          TOPICS=("Last Minute Birthday Bouquets" "Same Day Sympathy Flowers" "Express Anniversary Roses" "Hand-Delivered Get Well Gifts")
-          SELECTED_TOPIC=${TOPICS[$RANDOM % ${#TOPICS[@]}]}
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          pip install requests # Hard-coded safety for IndexNow scripts
+
+      - name: Update Daily Assets
+        run: |
+          # 1. Topic Selection for Index Velocity
+          TOPICS=("Last Minute Birthday Bouquets" "Same Day Sympathy Flowers" "Express Anniversary Roses" "Hand-Delivered Get Well Gifts" "Mother's Day Panic Window 2026")
+          SELECTED_TOPIC="${TOPICS[$RANDOM % ${#TOPICS[@]}]}"
+          echo "SELECTED_TOPIC=$SELECTED_TOPIC" >> $GITHUB_ENV
           
-          # 2. Define Shared Footer
+          # 2. Define Shared Footer with CORRECT Affiliate ID: 2013017799
           FOOTER="<footer style='margin-top:50px; padding:20px; border-top:1px solid #ddd; text-align:center; font-family:sans-serif;'>
             <nav>
               <a href='index.html'>Home</a> | 
               <a href='blog.html'>Daily Blog</a> | 
               <a href='faq.html'>FAQ</a> | 
-              <a href='sitemap.xml'>Sitemap</a>
+              <a href='sitemap.xml'>Sitemap</a> |
+              <a href='llms.txt'>AI Context</a>
             </nav>
-            <p>👉 <a href='https://www.floristone.com/index.cfm?source_id=aff&AffiliateID=2013017799'><strong>Order Same-Day Flowers via FloristOne</strong></a></p>
+            <p>👉 <a href='https://www.floristone.com/main.cfm?occ=md&source_id=aff&AffiliateID=2013017799'><strong>Order Same-Day Flowers via FloristOne</strong></a></p>
           </footer>"
 
           # 3. Generate Daily blog.html
@@ -42,16 +56,28 @@ jobs:
           </head>
           <body>
             <h1>$SELECTED_TOPIC: 2026 Delivery Guide</h1>
-            <p>Our daily update focuses on how to get fresh blooms to your destination in hours...</p>
+            <p>Our daily update for $(date +'%Y-%m-%d') focuses on securing premium, hand-delivered blooms. Fast fulfillment is critical for $SELECTED_TOPIC.</p>
             $FOOTER
           </body>
           </html>
           EOF
 
+      - name: Execute Vulture Core Scripts
+        run: |
+          # Only runs scripts if they exist in the current repo
+          if [ -f vulture_generator.py ]; then python vulture_generator.py; fi
+          if [ -f generate_llms_txt.py ]; then python generate_llms_txt.py; fi
+          if [ -f sdf_bing_blast.py ]; then python sdf_bing_blast.py; fi
+          if [ -f blast_to_bing.py ]; then python blast_to_bing.py; fi
+
       - name: Commit and Push Changes
         run: |
-          git config user.name "FlowerEngineBot"
-          git config user.email "bot@brightlane.dev"
-          git add blog.html
-          git commit -m "Engine Update: $SELECTED_TOPIC" || echo "No changes to commit"
-          git push
+          git config user.name "Vulture-Bot"
+          git config user.email "actions@github.com"
+          git add .
+          if [ -n "$(git status --porcelain)" ]; then
+            git commit -m "Vulture Engine Sync: $SELECTED_TOPIC"
+            git push
+          else
+            echo "No changes detected."
+          fi
