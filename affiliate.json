@@ -3,7 +3,7 @@
   "affiliate_id": "2013017799",
   "base_url": "https://www.floristone.com/main.cfm",
   "params": {
-    "occ": "cm",
+    "occ": "md", 
     "source_id": "aff"
   },
   "site_url": "https://brightlane.github.io/",
@@ -18,5 +18,5 @@
     "new-baby",
     "christmas"
   ],
-  "last_updated": "2026-05-02"
+  "last_updated": "2026-05-04"
 }
