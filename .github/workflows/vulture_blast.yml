@@ -21,19 +21,16 @@ jobs:
         with:
           python-version: '3.10'
 
-      - name: Force Install and Run
+      - name: Install and Execute
         run: |
-          # Use the full path to the python binary provided by the action
+          # Use 'python -m' to ensure we target the Action's Python instance
           python -m pip install --upgrade pip
           python -m pip install requests
-          
-          # Verify installation in the logs so we can see it
-          python -c "import requests; print('✅ Requests is officially installed')"
           
           # Run the generator
           python vulture_generator.py
           
-          # Run the blast
+          # Run the blast (Note: we use 'python', NOT 'python3')
           python sdf_bing_blast.py
 
       - name: Commit and Push Changes
@@ -42,7 +39,7 @@ jobs:
           git config --global user.email "actions@github.com"
           git add .
           if [ -n "$(git status --porcelain)" ]; then
-            git commit -m "Vulture Engine: Daily Update [$(date +'%Y-%m-%d')]"
+            git commit -m "Vulture Engine Update [$(date +'%Y-%m-%d')]"
             git push
           else
             echo "No changes to commit"
