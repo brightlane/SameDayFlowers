@@ -6,17 +6,33 @@ from datetime import datetime
 from urllib.parse import quote
 
 # =========================
-# LOAD CONFIG SAFELY
+# SAFE CONFIG LOADER (CI SAFE)
 # =========================
-with open("config.json", "r", encoding="utf-8") as f:
-    config = json.load(f)
+CONFIG_PATH = "config.json"
+
+DEFAULT_CONFIG = {
+    "affiliate_id": "2013017799",
+    "links": {
+        "messenger_bridge": "https://m.me/brightlane?ref=nwkkk7vkps17",
+        "fallback": "https://brightlane.github.io/SameDayFlowers/"
+    },
+    "tracking": {
+        "AffiliateID": "2013017799"
+    }
+}
+
+if os.path.exists(CONFIG_PATH):
+    with open(CONFIG_PATH, "r", encoding="utf-8") as f:
+        config = json.load(f)
+else:
+    print("⚠️ config.json missing — using defaults")
+    config = DEFAULT_CONFIG
 
 # =========================
-# SAFE LINK LOADING (FIXED)
+# SAFE LINK EXTRACTION
 # =========================
 MANYCHAT_LINK = (
     config.get("links", {}).get("messenger_bridge")
-    or config.get("links", {}).get("manychat_entry")
 )
 
 AFFILIATE_ID = (
@@ -24,14 +40,8 @@ AFFILIATE_ID = (
     or config.get("affiliate_id")
 )
 
-FALLBACK_URL = config.get("links", {}).get("fallback")
-
-# HARD FALLBACKS (prevents crashes)
-if not MANYCHAT_LINK:
-    MANYCHAT_LINK = "https://m.me/brightlane?ref=nwkkk7vkps17"
-
 if not AFFILIATE_ID:
-    raise ValueError("Missing AffiliateID in config.json")
+    raise ValueError("Missing AffiliateID (required for Florist One tracking)")
 
 # =========================
 # CORE SETTINGS
@@ -61,7 +71,6 @@ for d in [SITEMAP_DIR, PAGE_DIR]:
 with open("cities.json", "r", encoding="utf-8") as f:
     data = json.load(f)
 
-# Deduplicate cities
 seen = set()
 clean = []
 
@@ -91,7 +100,7 @@ def build_page(city, state, slug):
 <html>
 <head>
   <title>Same Day Flowers in {city}, {state}</title>
-  <meta name="description" content="Order same day flowers in {city}, {state}. Fast delivery available.">
+  <meta name="description" content="Order same day flowers in {city}, {state}.">
 </head>
 <body>
 
@@ -115,7 +124,7 @@ function routeUser() {{
     url = MANYCHAT;
   }}
 
-  // Traffic split (40% ManyChat)
+  // 40% traffic split
   if (Math.random() < 0.4) {{
     url = MANYCHAT;
   }}
@@ -149,12 +158,9 @@ for i in range(parts):
             slug = f"flowers-{city_slug}-{state_slug}.html"
             loc = f"{BASE_URL}/{PAGE_DIR}/{slug}"
 
-            # sitemap entry
             f.write(f"<url><loc>{loc}</loc><lastmod>{TODAY}</lastmod></url>\n")
 
-            # page generation
             page_html = build_page(item["city"], item["state"], slug)
-
             with open(os.path.join(PAGE_DIR, slug), "w", encoding="utf-8") as p:
                 p.write(page_html)
 
@@ -174,8 +180,8 @@ with open("sitemap.xml", "w", encoding="utf-8") as f:
 
     f.write("</sitemapindex>")
 
-print("\n--- VULTURE SYSTEM COMPLETE ---")
+print("\n--- BUILD COMPLETE ---")
 print(f"Pages: {total}")
 print(f"Sitemaps: {parts}")
-print("Status: SAFE BUILD (no KeyErrors)")
-print("--------------------------------")
+print("Status: CI SAFE + NO CRASH MODE")
+print("------------------------")
