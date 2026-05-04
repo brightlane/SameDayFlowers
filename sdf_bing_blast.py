@@ -1,8 +1,17 @@
+import sys
+import subprocess
 import os
 import json
 import random
-import requests
 from datetime import datetime
+
+# --- SELF-HEALING DEPENDENCY CHECK ---
+try:
+    import requests
+except ImportError:
+    print("⚠️ Requests missing. Self-installing...")
+    subprocess.check_call([sys.executable, "-m", "pip", "install", "requests"])
+    import requests
 
 # --- CONFIGURATION ---
 SITE_URL = "https://brightlane.github.io/SameDayFlowers"
@@ -10,24 +19,19 @@ INDEXNOW_KEY = "eWVDN3vbam9nnaZQu7wAQKyfmJJdM7zjI80l4DGeUrQ"
 KEY_LOCATION = f"{SITE_URL}/{INDEXNOW_KEY}.txt"
 
 def load_cities():
-    """Loads cities with strict error handling for 10k scale."""
+    """Loads the city database with error handling."""
     if os.path.exists('cities.json'):
         try:
             with open('cities.json', 'r', encoding='utf-8') as f:
-                data = json.load(f)
-                if not data:
-                    raise ValueError("cities.json is empty")
-                return data
-        except json.JSONDecodeError as e:
-            print(f"❌ JSON SYNTAX ERROR: {e}")
-            print("Check for missing/extra commas around the line mentioned in the error.")
-            # Fallback to a small list so the script doesn't crash
-            return [{"city": "New York", "state": "NY"}]
-    else:
-        print("⚠️ cities.json not found.")
-        return [{"city": "New York", "state": "NY"}]
+                return json.load(f)
+        except Exception as e:
+            print(f"❌ JSON Load Error: {e}")
+            return []
+    print("⚠️ cities.json not found.")
+    return []
 
 def broadcast_to_indexnow(urls):
+    """Sends URLs to the IndexNow API."""
     endpoint = "https://api.indexnow.org/IndexNow"
     data = {
         "host": "brightlane.github.io",
@@ -36,43 +40,42 @@ def broadcast_to_indexnow(urls):
         "urlList": urls
     }
     try:
-        response = requests.post(endpoint, json=data, timeout=10)
-        print(f"📡 IndexNow Response: {response.status_code}")
+        response = requests.post(endpoint, json=data, timeout=15)
+        print(f"📡 IndexNow Pulse: {response.status_code}")
     except Exception as e:
-        print(f"❌ Connection Failed: {e}")
+        print(f"❌ API Connection Failed: {e}")
 
 def main():
-    print(f"🚀 Vulture 10K Blast Engine Initialized")
+    print(f"🚀 Vulture Engine: Targeting Mother's Day May 10, 2026")
     
-    # 1. LOAD DATA
     ALL_CITIES = load_cities()
-    
-    # 2. SELECT RANGE (2001-4000)
-    # Python slices are 0-indexed: [2000:4000] gives cities 2001 to 4000
-    try:
-        total = len(ALL_CITIES)
-        start, end = 2000, 4000
-        
-        # Ensure we don't go out of bounds
-        segment = ALL_CITIES[start:min(end, total)]
-        
-        # Sample 100 for Mother's Day Velocity
-        city_batch = random.sample(segment, min(len(segment), 100))
-        print(f"Processing {len(city_batch)} cities from the 2k-4k block.")
-    except Exception as e:
-        print(f"Selection Error: {e}")
-        city_batch = ALL_CITIES[:10]
+    if not ALL_CITIES:
+        print("No cities to process. Exiting.")
+        return
 
-    # 3. URL GENERATION
+    # TARGETING RANGE 2001-4000
+    try:
+        start, end = 2000, 4000 # Slice for city 2001 to 4000
+        segment = ALL_CITIES[start:min(end, len(ALL_CITIES))]
+        
+        # Velocity Control: 100 cities per daily blast
+        city_batch = random.sample(segment, min(len(segment), 100))
+        print(f"Selected {len(city_batch)} cities from the 2k-4k range.")
+    except Exception as e:
+        print(f"Sampling Error: {e}")
+        city_batch = ALL_CITIES[:50]
+
+    # GENERATE URLs
     urls_to_index = []
     for item in city_batch:
         city_slug = item['city'].lower().replace(" ", "-")
         state_slug = item['state'].lower()
         urls_to_index.append(f"{SITE_URL}/blog/flowers-{city_slug}-{state_slug}.html")
 
+    # Add homepage and AI discovery files
     urls_to_index.append(f"{SITE_URL}/index.html")
+    urls_to_index.append(f"{SITE_URL}/sitemap.xml")
 
-    # 4. EXECUTE
     if urls_to_index:
         broadcast_to_indexnow(urls_to_index)
 
