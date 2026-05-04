@@ -1,100 +1,69 @@
 import os
-from datetime import date
 
 BASE_URL = "https://brightlane.github.io/SameDayFlowers"
 
-FOLDERS = ["blog", "guide", "shop", "dispatch"]
+FOLDERS = ["blog", "shop", "guide", "dispatch", "now", "trending"]
 
-def collect_pages():
-    pages = {}
+OUTPUT_FILE = "sitemap.html"
+
+def collect():
+    pages = []
 
     for folder in FOLDERS:
-        if os.path.exists(folder):
-            pages[folder] = [
-                f for f in os.listdir(folder)
-                if f.endswith(".html")
-            ]
-        else:
-            pages[folder] = []
+        if not os.path.exists(folder):
+            continue
 
-    return pages
+        for f in os.listdir(folder):
+            if f.endswith(".html"):
+                pages.append(f"{BASE_URL}/{folder}/{f}")
+
+    return sorted(pages)
 
 
-def build_html():
-    data = collect_pages()
-
-    html = f"""<!DOCTYPE html>
+def build(pages):
+    html = """<!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
-    <title>SameDayFlowers Sitemap</title>
-    <style>
-        body {{
-            font-family: Arial, sans-serif;
-            background: #0a0b10;
-            color: #eaeaea;
-            padding: 40px;
-        }}
-        h1 {{
-            color: #ffffff;
-        }}
-        h2 {{
-            color: #ff4757;
-            margin-top: 40px;
-        }}
-        a {{
-            color: #70a1ff;
-            text-decoration: none;
-        }}
-        a:hover {{
-            text-decoration: underline;
-        }}
-        .box {{
-            margin-bottom: 30px;
-            padding: 20px;
-            background: #11141d;
-            border-radius: 10px;
-        }}
-        .meta {{
-            color: #888;
-            font-size: 12px;
-        }}
-    </style>
+<meta charset="UTF-8">
+<title>Sitemap</title>
+<style>
+body { font-family: Arial; background:#0a0b10; color:#fff; padding:40px; }
+a { color:#70a1ff; display:block; margin:6px 0; }
+h1 { color:#ff4757; }
+</style>
 </head>
 <body>
 
-<h1>📍 SameDayFlowers Sitemap</h1>
-<div class="meta">Updated: {date.today()}</div>
+<h1>Auto Sitemap</h1>
 """
 
-    total = 0
+    html += f"<p>Total pages: {len(pages)}</p>\n"
 
-    for folder, files in data.items():
-        html += f"<div class='box'>"
-        html += f"<h2>/{folder}/</h2>"
+    for url in pages:
+        html += f'<a href="{url}">{url}</a>\n'
 
-        if not files:
-            html += "<p>No pages found.</p>"
-        else:
-            for f in sorted(files):
-                url = f"{BASE_URL}/{folder}/{f}"
-                html += f'<div><a href="{url}">{f}</a></div>'
-                total += 1
-
-        html += "</div>"
-
-    html += f"""
-<p class="meta">Total Pages: {total}</p>
-
+    html += """
 </body>
 </html>
 """
 
-    with open("sitemap.html", "w", encoding="utf-8") as f:
+    return html
+
+
+def main():
+    pages = collect()
+
+    if not pages:
+        print("❌ No pages found")
+        return
+
+    html = build(pages)
+
+    with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
         f.write(html)
 
-    print("✅ sitemap.html generated with", total, "pages")
+    print(f"✅ sitemap.html generated with {len(pages)} pages")
 
 
 if __name__ == "__main__":
-    build_html() 
+    main()
