@@ -1,22 +1,18 @@
 {
-  "program": "FloristOne",
-  "affiliate_id": "2013017799",
-  "base_url": "https://www.floristone.com/main.cfm",
-  "params": {
-    "occ": "md", 
-    "source_id": "aff"
+  "project": "SameDayFlowers Mother's Day 2026",
+  "affiliate_manager": "brightlane",
+  "manychat_partner_id": "nwkkk7vkps17",
+  "links": {
+    "partner_portal": "https://manychat.partnerlinks.io/nwkkk7vkps17",
+    "messenger_bridge": "https://m.me/brightlane?ref=nwkkk7vkps17",
+    "fallback_url": "https://brightlane.github.io/SameDayFlowers/"
   },
-  "site_url": "https://brightlane.github.io/",
-  "supported_occasions": [
-    "mothers-day",
-    "sympathy",
-    "birthday",
-    "get-well",
-    "anniversary",
-    "romance",
-    "thank-you",
-    "new-baby",
-    "christmas"
-  ],
-  "last_updated": "2026-05-04"
+  "parameters": {
+    "atid": "ProfessorOwlTaxGuide",
+    "campaign": "vulture_10k_mothers_day",
+    "panic_window_active": true,
+    "deadline_date": "2026-05-10"
+  },
+  "last_updated": "2026-05-04T15:22:00Z",
+  "vulture_engine_version": "3.0"
 }
