@@ -1,41 +1,38 @@
 import os
 import json
 import shutil
-from datetime import datetime
 from urllib.parse import quote
 
-# =========================
-# SETTINGS
-# =========================
 BASE_URL = "https://brightlane.github.io/SameDayFlowers"
 PAGE_DIR = "blog"
-TODAY = datetime.now().strftime("%Y-%m-%d")
+SITEMAP_DIR = "sitemaps"
 
-# Affiliate (hard safe)
 AFFILIATE_LINK = "http://www.floristone.com/main.cfm?source_id=aff&AffiliateID=2013017799&occ=mothersday"
 MANYCHAT_LINK = "https://m.me/brightlane?ref=nwkkk7vkps17"
 
 # =========================
-# FORCE CLEAN BUILD FOLDER
+# CLEAN OUTPUT
 # =========================
-if os.path.exists(PAGE_DIR):
-    shutil.rmtree(PAGE_DIR)
-
-os.makedirs(PAGE_DIR, exist_ok=True)
+for folder in [PAGE_DIR, SITEMAP_DIR]:
+    if os.path.exists(folder):
+        shutil.rmtree(folder)
+    os.makedirs(folder)
 
 # =========================
-# LOAD DATA (IMPORTANT)
+# LOAD DATA (FAIL FAST IF MISSING)
 # =========================
 if not os.path.exists("cities.json"):
-    raise FileNotFoundError("cities.json is missing")
+    raise FileNotFoundError("cities.json missing in repo")
 
 with open("cities.json", "r", encoding="utf-8") as f:
     cities = json.load(f)
 
+print("Cities loaded:", len(cities))
+
 # =========================
 # PAGE TEMPLATE
 # =========================
-def build_page(city, state, slug):
+def build_page(city, state):
     return f"""<!DOCTYPE html>
 <html>
 <head>
@@ -46,50 +43,48 @@ def build_page(city, state, slug):
 
 <h1>Same Day Flowers in {city}, {state}</h1>
 
-<button onclick="go()">Order Flowers</button>
-
-<script>
-const affiliate = "{AFFILIATE_LINK}";
-const manychat = "{MANYCHAT_LINK}";
-
-function go() {{
-  window.location.href = affiliate;
-}}
-</script>
+<a href="{AFFILIATE_LINK}">Order Flowers</a>
+<br>
+<a href="{MANYCHAT_LINK}">Order via Chat</a>
 
 </body>
 </html>"""
 
 # =========================
-# GENERATE PAGES
+# GENERATE FILES
 # =========================
+child_sitemaps = []
 count = 0
 
-for item in cities:
+for i, item in enumerate(cities):
     city = item.get("city", "").strip()
     state = item.get("state", "").strip()
 
     if not city or not state:
         continue
 
-    city_slug = quote(city.lower().replace(" ", "-"))
-    state_slug = quote(state.lower())
-
-    filename = f"flowers-{city_slug}-{state_slug}.html"
-    path = os.path.join(PAGE_DIR, filename)
-
-    html = build_page(city, state, filename)
+    slug = f"flowers-{quote(city.lower().replace(' ', '-'))}-{quote(state.lower())}.html"
+    path = os.path.join(PAGE_DIR, slug)
 
     with open(path, "w", encoding="utf-8") as f:
-        f.write(html)
+        f.write(build_page(city, state))
 
     count += 1
-    print(f"Created: {path}")
 
 # =========================
-# FINAL DEBUG OUTPUT
+# SITEMAP (SINGLE FILE = SIMPLER + RELIABLE)
 # =========================
-print("\n--- BUILD SUMMARY ---")
+sitemap_path = os.path.join(SITEMAP_DIR, "sitemap.xml")
+
+with open(sitemap_path, "w", encoding="utf-8") as f:
+    f.write('<?xml version="1.0" encoding="UTF-8"?>\n')
+    f.write('<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n')
+
+    for file in os.listdir(PAGE_DIR):
+        url = f"{BASE_URL}/{PAGE_DIR}/{file}"
+        f.write(f"<url><loc>{url}</loc></url>\n")
+
+    f.write("</urlset>")
+
 print("Pages created:", count)
-print("Folder exists:", os.path.exists(PAGE_DIR))
-print("Files in blog:", len(os.listdir(PAGE_DIR)))
+print("Sitemap generated")
