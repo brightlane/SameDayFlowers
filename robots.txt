@@ -1,7 +1,17 @@
 User-agent: *
 Allow: /
-User-agent: Googlebot
+Allow: /blog/
+Allow: /llms.txt
+
+# Vulture 10K Protocol - AI Agent Directives
+User-agent: GPTBot
 Allow: /
-User-agent: Bingbot
+
+User-agent: Google-Extended
 Allow: /
-Sitemap: https://brightlane.github.io/SameDayFlowers/sitemap.xml
+
+User-agent: PerplexityBot
+Allow: /
+
+# Sitemap Location
+Sitemap: https://brightlane.github.io/sitemap.xml
