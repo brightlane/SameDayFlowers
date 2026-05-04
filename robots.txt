@@ -1,17 +1,17 @@
+# Vulture 10K Protocol: SameDayFlowers
+# Target: Mother's Day May 10, 2026
+
 User-agent: *
 Allow: /
-Allow: /blog/
-Allow: /llms.txt
+Disallow: /private/
+Disallow: /tmp/
 
-# Vulture 10K Protocol - AI Agent Directives
-User-agent: GPTBot
-Allow: /
+# Crawl-delay ensures GitHub Pages stability during massive index blasts
+Crawl-delay: 1
 
-User-agent: Google-Extended
-Allow: /
-
-User-agent: PerplexityBot
-Allow: /
+# AI Agent Discovery (LLM Optimization)
+# Providing a direct path for AI models to ingest your service context
+Link: <https://brightlane.github.io/SameDayFlowers/llms.txt>; rel="help"; type="text/plain"
 
 # Sitemap Location
-Sitemap: https://brightlane.github.io/sitemap.xml
+Sitemap: https://brightlane.github.io/SameDayFlowers/sitemap.xml
