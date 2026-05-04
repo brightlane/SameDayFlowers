@@ -1,4 +1,3 @@
-import math
 import os
 import json
 import shutil
@@ -6,130 +5,55 @@ from datetime import datetime
 from urllib.parse import quote
 
 # =========================
-# SAFE CONFIG LOADER (CI SAFE)
+# SETTINGS
 # =========================
-CONFIG_PATH = "config.json"
-
-DEFAULT_CONFIG = {
-    "affiliate_id": "2013017799",
-    "links": {
-        "messenger_bridge": "https://m.me/brightlane?ref=nwkkk7vkps17",
-        "fallback": "https://brightlane.github.io/SameDayFlowers/"
-    },
-    "tracking": {
-        "AffiliateID": "2013017799"
-    }
-}
-
-if os.path.exists(CONFIG_PATH):
-    with open(CONFIG_PATH, "r", encoding="utf-8") as f:
-        config = json.load(f)
-else:
-    print("⚠️ config.json missing — using defaults")
-    config = DEFAULT_CONFIG
-
-# =========================
-# SAFE LINK EXTRACTION
-# =========================
-MANYCHAT_LINK = (
-    config.get("links", {}).get("messenger_bridge")
-)
-
-AFFILIATE_ID = (
-    config.get("tracking", {}).get("AffiliateID")
-    or config.get("affiliate_id")
-)
-
-if not AFFILIATE_ID:
-    raise ValueError("Missing AffiliateID (required for Florist One tracking)")
-
-# =========================
-# CORE SETTINGS
-# =========================
-CHUNK_SIZE = 45000
 BASE_URL = "https://brightlane.github.io/SameDayFlowers"
-SITEMAP_DIR = "sitemaps"
 PAGE_DIR = "blog"
 TODAY = datetime.now().strftime("%Y-%m-%d")
 
-AFFILIATE_LINK = (
-    f"http://www.floristone.com/main.cfm?"
-    f"source_id=aff&AffiliateID={AFFILIATE_ID}&occ=mothersday"
-)
+# Affiliate (hard safe)
+AFFILIATE_LINK = "http://www.floristone.com/main.cfm?source_id=aff&AffiliateID=2013017799&occ=mothersday"
+MANYCHAT_LINK = "https://m.me/brightlane?ref=nwkkk7vkps17"
 
 # =========================
-# RESET OUTPUT DIRS
+# FORCE CLEAN BUILD FOLDER
 # =========================
-for d in [SITEMAP_DIR, PAGE_DIR]:
-    if os.path.exists(d):
-        shutil.rmtree(d)
-    os.makedirs(d)
+if os.path.exists(PAGE_DIR):
+    shutil.rmtree(PAGE_DIR)
+
+os.makedirs(PAGE_DIR, exist_ok=True)
 
 # =========================
-# LOAD CITY DATA
+# LOAD DATA (IMPORTANT)
 # =========================
+if not os.path.exists("cities.json"):
+    raise FileNotFoundError("cities.json is missing")
+
 with open("cities.json", "r", encoding="utf-8") as f:
-    data = json.load(f)
-
-seen = set()
-clean = []
-
-for item in data:
-    city = item.get("city", "").strip()
-    state = item.get("state", "").strip()
-
-    if not city or not state:
-        continue
-
-    key = f"{city.lower()}-{state.lower()}"
-    if key in seen:
-        continue
-
-    seen.add(key)
-    clean.append({"city": city, "state": state})
-
-total = len(clean)
-parts = math.ceil(total / CHUNK_SIZE)
-child_files = []
+    cities = json.load(f)
 
 # =========================
-# PAGE BUILDER
+# PAGE TEMPLATE
 # =========================
 def build_page(city, state, slug):
     return f"""<!DOCTYPE html>
 <html>
 <head>
-  <title>Same Day Flowers in {city}, {state}</title>
-  <meta name="description" content="Order same day flowers in {city}, {state}.">
+  <meta charset="UTF-8">
+  <title>Flowers in {city}, {state}</title>
 </head>
 <body>
 
 <h1>Same Day Flowers in {city}, {state}</h1>
 
-<button onclick="routeUser()">Order Flowers 🌸</button>
+<button onclick="go()">Order Flowers</button>
 
 <script>
-const MANYCHAT = "{MANYCHAT_LINK}";
-const AFFILIATE = "{AFFILIATE_LINK}";
+const affiliate = "{AFFILIATE_LINK}";
+const manychat = "{MANYCHAT_LINK}";
 
-function routeUser() {{
-  const now = new Date();
-  const panicStart = new Date("2026-05-07");
-  const panicEnd = new Date("2026-05-10");
-
-  let url = AFFILIATE;
-
-  // Panic window → ManyChat first
-  if (now >= panicStart && now <= panicEnd) {{
-    url = MANYCHAT;
-  }}
-
-  // 40% traffic split
-  if (Math.random() < 0.4) {{
-    url = MANYCHAT;
-  }}
-
-  window.location.href = url;
+function go() {{
+  window.location.href = affiliate;
 }}
 </script>
 
@@ -137,51 +61,35 @@ function routeUser() {{
 </html>"""
 
 # =========================
-# GENERATE SITEMAPS + PAGES
+# GENERATE PAGES
 # =========================
-for i in range(parts):
-    filename = f"part-{i+1}.xml"
-    child_files.append(filename)
+count = 0
 
-    start = i * CHUNK_SIZE
-    end = (i + 1) * CHUNK_SIZE
-    chunk = clean[start:end]
+for item in cities:
+    city = item.get("city", "").strip()
+    state = item.get("state", "").strip()
 
-    with open(os.path.join(SITEMAP_DIR, filename), "w", encoding="utf-8") as f:
-        f.write('<?xml version="1.0" encoding="UTF-8"?>\n')
-        f.write('<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n')
+    if not city or not state:
+        continue
 
-        for item in chunk:
-            city_slug = quote(item["city"].lower().replace(" ", "-"))
-            state_slug = quote(item["state"].lower())
+    city_slug = quote(city.lower().replace(" ", "-"))
+    state_slug = quote(state.lower())
 
-            slug = f"flowers-{city_slug}-{state_slug}.html"
-            loc = f"{BASE_URL}/{PAGE_DIR}/{slug}"
+    filename = f"flowers-{city_slug}-{state_slug}.html"
+    path = os.path.join(PAGE_DIR, filename)
 
-            f.write(f"<url><loc>{loc}</loc><lastmod>{TODAY}</lastmod></url>\n")
+    html = build_page(city, state, filename)
 
-            page_html = build_page(item["city"], item["state"], slug)
-            with open(os.path.join(PAGE_DIR, slug), "w", encoding="utf-8") as p:
-                p.write(page_html)
+    with open(path, "w", encoding="utf-8") as f:
+        f.write(html)
 
-        f.write("</urlset>")
-
-    print(f"Created {filename}")
+    count += 1
+    print(f"Created: {path}")
 
 # =========================
-# MASTER SITEMAP
+# FINAL DEBUG OUTPUT
 # =========================
-with open("sitemap.xml", "w", encoding="utf-8") as f:
-    f.write('<?xml version="1.0" encoding="UTF-8"?>\n')
-    f.write('<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n')
-
-    for child in child_files:
-        f.write(f"<sitemap><loc>{BASE_URL}/{SITEMAP_DIR}/{child}</loc></sitemap>\n")
-
-    f.write("</sitemapindex>")
-
-print("\n--- BUILD COMPLETE ---")
-print(f"Pages: {total}")
-print(f"Sitemaps: {parts}")
-print("Status: CI SAFE + NO CRASH MODE")
-print("------------------------")
+print("\n--- BUILD SUMMARY ---")
+print("Pages created:", count)
+print("Folder exists:", os.path.exists(PAGE_DIR))
+print("Files in blog:", len(os.listdir(PAGE_DIR)))
