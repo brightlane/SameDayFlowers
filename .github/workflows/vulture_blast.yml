@@ -1,26 +1,48 @@
-name: Vulture 10K Blast
+name: Same Day Flowers Daily Engine
+
 on:
   schedule:
-    - cron: '0 0 * * *'
+    # Runs at 05:00 UTC (12:00 AM EST) every day
+    - cron: '0 5 * * *'
   workflow_dispatch:
+    # Allows you to manually click "Run workflow" in the Actions tab
+    inputs:
+      reason:
+        description: 'Reason for manual blast'
+        required: false
+        default: 'Mother Day Panic Window Push'
 
 jobs:
-  build:
+  build-and-broadcast:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
+    
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: '3.10'
-      - name: Execute Vulture Generator
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests
+
+      - name: Run Vulture Page Generator
         run: python vulture_generator.py
+        # This ensures your 2001-4000 .html files are actually created 
+        # before we tell Bing to look for them.
+
+      - name: Run Vulture Bing Blast
+        run: python sdf_bing_blast.py
+        # This broadcasts the URLs to the IndexNow API.
+
       - name: Commit and Push Changes
         run: |
-          git config --global user.name "brightlane"
-          git config --global user.email "your-email@example.com"
+          git config --global user.name "Vulture-Bot"
+          git config --global user.email "actions@github.com"
           git add .
-          git commit -m "Vulture Blast: $(date +'%Y-%m-%d')" || exit 0
+          git commit -m "Vulture Engine: Updated City Pages and Sitemap [$(date +'%Y-%m-%d')]" || echo "No changes to commit"
           git push
