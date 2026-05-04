@@ -1,22 +1,23 @@
 import os
 import random
 import datetime
+import urllib.request
+import json
 
 # --- CONFIGURATION ---
 BASE_URL = "https://brightlane.github.io"
 PROJECT_DIR = "blog"
 INDEX_NOW_KEY = "YOUR_INDEX_NOW_KEY_HERE"  # Place your key file in root
-AFFILIATE_ID = "007949054186005142" # e-file/ManyChat specific ID
+AFFILIATE_ID = "007949054186005142" 
 MANYCHAT_LINK = f"https://m.me/YourPage?ref={AFFILIATE_ID}"
 
-# POPULATION TIER: 2001 - 4000 (Sample batch - Expand this list to 2000 items)
+# POPULATION TIER: 2001 - 4000
 CITIES = [
     {"city": "Zionsville", "state": "IN"}, {"city": "Haddonfield", "state": "NJ"},
-    {"city": "Brielle", "state": "NJ"}, {"city": "Yellow Springs", "OH": "OH"},
-    # ... Add your full list of 2000 cities here ...
+    {"city": "Brielle", "state": "NJ"}, {"city": "Yellow Springs", "state": "OH"},
+    # ... Add full list ...
 ]
 
-# CONTENT VARIATIONS (Chameleon Logic)
 HOOKS = [
     "Surprise Mom this Sunday!",
     "Last-minute flowers for Mother's Day.",
@@ -56,26 +57,47 @@ def generate_page_html(city, state):
 </body>
 </html>"""
     
-    with open(f"{PROJECT_DIR}/{filename}", "w") as f:
+    with open(f"{PROJECT_DIR}/{filename}", "w", encoding="utf-8") as f:
         f.write(html_content)
     return filename
 
-def update_sitemap(filenames):
+def update_sitemap():
+    """Scans the directory and builds a fresh sitemap.xml for all files."""
     today = datetime.date.today().isoformat()
+    all_files = [f for f in os.listdir(PROJECT_DIR) if f.endswith('.html')]
+    
     sitemap_header = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
     sitemap_footer = '</urlset>'
     
-    with open("sitemap.xml", "w") as f:
+    with open("sitemap.xml", "w", encoding="utf-8") as f:
         f.write(sitemap_header)
-        for name in filenames:
-            f.write(f"  <url>\n    <loc>{BASE_URL}/{PROJECT_DIR}/{name}</loc>\n    <lastmod>{today}</lastmod>\n  </url>\n")
+        # Add Root
+        f.write(f'  <url>\n    <loc>{BASE_URL}/</loc>\n    <lastmod>{today}</lastmod>\n    <priority>1.0</priority>\n  </url>\n')
+        # Add All Blog Pages
+        for name in all_files:
+            f.write(f'  <url>\n    <loc>{BASE_URL}/{PROJECT_DIR}/{name}</loc>\n    <lastmod>{today}</lastmod>\n    <priority>0.8</priority>\n  </url>\n')
         f.write(sitemap_footer)
+    return all_files
 
 def ping_index_now(filenames):
-    # This simulates the IndexNow API call
-    # In a live environment, use the 'requests' library to POST to https://www.bing.com/indexnow
-    print(f"Pinging IndexNow for {len(filenames)} new pages...")
-    # Example: requests.post(f"https://www.bing.com/indexnow?url={url}&key={INDEX_NOW_KEY}")
+    """Pings Bing/IndexNow with the list of new URLs."""
+    print(f"📡 Pinging IndexNow for {len(filenames)} pages...")
+    url_list = [f"{BASE_URL}/{PROJECT_DIR}/{f}" for f in filenames]
+    
+    data = {
+        "host": BASE_URL.replace("https://", ""),
+        "key": INDEX_NOW_KEY,
+        "urlList": url_list
+    }
+    
+    # Using urllib to keep it zero-dependency
+    req = urllib.request.Request("https://www.bing.com/indexnow", data=json.dumps(data).encode('utf-8'), headers={'Content-Type': 'application/json'})
+    try:
+        with urllib.request.urlopen(req) as response:
+            if response.status == 200:
+                print("✅ IndexNow Notification Sent Successfully.")
+    except Exception as e:
+        print(f"❌ IndexNow Ping Failed: {e}")
 
 # --- EXECUTION ---
 
@@ -83,14 +105,17 @@ if __name__ == "__main__":
     if not os.path.exists(PROJECT_DIR):
         os.makedirs(PROJECT_DIR)
     
-    generated_files = []
     print(f"🚀 Starting Vulture 10K Blast for {len(CITIES)} cities...")
     
+    current_run_files = []
     for item in CITIES:
         fname = generate_page_html(item['city'], item['state'])
-        generated_files.append(fname)
+        current_run_files.append(fname)
         
-    update_sitemap(generated_files)
-    ping_index_now(generated_files)
+    # Rebuild sitemap from ALL files in folder
+    all_pages = update_sitemap()
     
-    print(f"✅ Success! 2,000 pages built in /{PROJECT_DIR}/ and sitemap updated.")
+    # Ping only the files created TODAY
+    ping_index_now(current_run_files)
+    
+    print(f"✅ Success! {len(all_pages)} total pages in sitemap.xml.")
