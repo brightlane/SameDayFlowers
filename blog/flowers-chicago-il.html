@@ -1,37 +1,21 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Same Day Flowers in Chicago, IL</title>
-  <meta name="description" content="Order same day flowers in Chicago, IL.">
+  <meta charset="UTF-8">
+  <title>Flowers in Chicago, IL</title>
 </head>
 <body>
 
 <h1>Same Day Flowers in Chicago, IL</h1>
 
-<button onclick="routeUser()">Order Flowers 🌸</button>
+<button onclick="go()">Order Flowers</button>
 
 <script>
-const MANYCHAT = "https://m.me/brightlane?ref=nwkkk7vkps17";
-const AFFILIATE = "http://www.floristone.com/main.cfm?source_id=aff&AffiliateID=2013017799&occ=mothersday";
+const affiliate = "http://www.floristone.com/main.cfm?source_id=aff&AffiliateID=2013017799&occ=mothersday";
+const manychat = "https://m.me/brightlane?ref=nwkkk7vkps17";
 
-function routeUser() {
-  const now = new Date();
-  const panicStart = new Date("2026-05-07");
-  const panicEnd = new Date("2026-05-10");
-
-  let url = AFFILIATE;
-
-  // Panic window → ManyChat first
-  if (now >= panicStart && now <= panicEnd) {
-    url = MANYCHAT;
-  }
-
-  // 40% traffic split
-  if (Math.random() < 0.4) {
-    url = MANYCHAT;
-  }
-
-  window.location.href = url;
+function go() {
+  window.location.href = affiliate;
 }
 </script>
 
