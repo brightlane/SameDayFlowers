@@ -5,6 +5,10 @@ on:
     - cron: '0 5 * * *'
   workflow_dispatch:
 
+# CRITICAL: Grant permission to write back to the repo
+permissions:
+  contents: write
+
 jobs:
   build-and-broadcast:
     runs-on: ubuntu-latest
@@ -17,25 +21,32 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.10'
+          cache: 'pip' # Automated caching of dependencies
 
-      - name: Install Dependencies
+      - name: Force Install and Run
         run: |
           python -m pip install --upgrade pip
-          pip install requests
-
-      - name: Run Vulture Page Generator
-        run: python vulture_generator.py
-
-      - name: Run Vulture Bing Blast
-        # Adding a quick check here to verify 'requests' is ready
-        run: |
-          python -c "import requests; print('Requests library is ready')"
+          python -m pip install requests
+          
+          # Run Generator first to ensure files exist for the Blast
+          python vulture_generator.py
+          
+          # Run the Blast
           python sdf_bing_blast.py
 
       - name: Commit and Push Changes
+        # This prevents the bot from failing if the script didn't change any files
         run: |
           git config --global user.name "Vulture-Bot"
           git config --global user.email "actions@github.com"
-          git add .
-          git commit -m "Vulture Engine Update [$(date +'%Y-%m-%d')]" || echo "No changes"
-          git push
+          
+          # Only add specific folders to keep the repo clean
+          git add blog/ sitemap.xml llms.txt robots.txt
+          
+          # Improved commit logic to handle "nothing to commit" cleanly
+          if [ -n "$(git status --porcelain)" ]; then
+            git commit -m "Vulture Engine: Daily Velocity Update [$(date +'%Y-%m-%d')]"
+            git push
+          else
+            echo "No changes detected in city pages. Skipping push."
+          fi
