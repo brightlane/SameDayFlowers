@@ -1,77 +1,189 @@
-<!DOCTYPE html>
-<html lang="en">
+import os
+import json
+import math
+from datetime import datetime
+
+# =========================
+# CONFIG
+# =========================
+BASE_URL = "https://brightlane.github.io/SameDayFlowers"
+PROJECT_DIR = "blog"
+SITEMAP_DIR = "sitemaps"
+
+AFFILIATE_ID = "2013017799"
+AFF_URL = f"https://www.floristone.com/main.cfm?AffiliateID={AFFILIATE_ID}&source_id=brightlane"
+
+CHUNK_SIZE = 45000
+TODAY = datetime.now().strftime("%Y-%m-%d")
+
+# =========================
+# SAFE HOOK GENERATOR FIXED
+# =========================
+ACTIONS = ["Send", "Buy", "Order", "Deliver", "Get", "Ship"]
+SUBJECTS = ["Luxury Bouquets", "Premium Roses", "Mother's Day Flowers", "Spring Tulips", "Designer Arrangements"]
+URGENCY = ["Express", "Same-Day", "Today", "Now", "Guaranteed"]
+
+HOOKS = [
+    f"{a} {s} in {{city}} - {{urgency}}"
+    for a in ACTIONS
+    for s in SUBJECTS
+    for _ in URGENCY
+]
+
+# =========================
+# HELPERS
+# =========================
+def ensure_dirs():
+    os.makedirs(PROJECT_DIR, exist_ok=True)
+    os.makedirs(SITEMAP_DIR, exist_ok=True)
+
+def slug(city, state):
+    return f"{city.lower().replace(' ', '-')}-{state.lower()}"
+
+# =========================
+# PAGE GENERATOR
+# =========================
+def generate_page(city, state):
+    hook = random.choice(HOOKS).format(
+        city=city,
+        urgency=random.choice(URGENCY)
+    )
+
+    filename = f"flowers-{slug(city, state)}.html"
+    path = os.path.join(PROJECT_DIR, filename)
+
+    html = f"""<!DOCTYPE html>
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Same-Day Delivery Logistics: The 2026 Same-Day Delivery Guide</title>
-  <style>
-    :root { --primary: #ff4757; --bg: #0a0b10; --card: #11141d; --text: #e0e0e0; --quora-red: #b92b27; }
-    body { font-family: 'Inter', system-ui, sans-serif; line-height: 1.8; max-width: 900px; margin: auto; padding: 30px; background: var(--bg); color: var(--text); }
-    h1, h2 { color: #fff; margin-top: 40px; }
-    strong { color: #fff; }
-    .cta-button { background: var(--primary); color: white; padding: 20px 40px; text-decoration: none; border-radius: 50px; font-weight: bold; display: inline-block; margin: 30px 0; transition: transform 0.2s; box-shadow: 0 10px 20px rgba(255, 71, 87, 0.3); }
-    .cta-button:hover { transform: scale(1.05); }
-    .quora-section { background: var(--card); border-left: 4px solid var(--quora-red); padding: 30px; margin-top: 40px; border-radius: 0 15px 15px 0; }
-    .qa-item { margin-bottom: 30px; border-bottom: 1px solid #1a1c23; padding-bottom: 20px; }
-    .qa-item strong { color: var(--quora-red); display: block; margin-bottom: 5px; font-size: 1.1rem; }
-    .qa-item em { color: #a4b0be; font-style: normal; display: block; }
-    footer { margin-top: 60px; padding: 20px; font-size: 0.8rem; color: #57606f; border-top: 1px solid #1a1c23; text-align: center; }
-  </style>
+<meta charset="utf-8">
+<title>{city} Flower Delivery</title>
 </head>
 <body>
-  <h1>Same-Day Delivery Logistics: The 2026 Guide</h1>
-  <p>In the world of high-velocity floral fulfillment, <strong>Same-Day Delivery Logistics</strong> is the difference between a fresh bouquet and a missed opportunity. Our 2026 protocol ensures that artisan arrangements move from local coolers to doorsteps within a 4-hour window.</p>
-  
-  <div style="text-align:center;">
-    <a href="https://www.floristone.com/index.cfm?source_id=aff&AffiliateID=2013017799" class="cta-button">Order Today's Fresh Selection Now</a>
-  </div>
+<h1>{hook}</h1>
 
-  <h2>Expert Q&A - Featured Logistics Insights</h2>
-  <div class="quora-section">
-    <div class='qa-item'>
-        <strong>Q: What is the cutoff time for same-day flower delivery in 2026?</strong>
-        <em>A: Most local networks require orders by 1:00 PM in the recipient's time zone. However, our high-velocity partners often extend this to 2:00 PM for major metro areas.</em>
-    </div>
-    <div class='qa-item'>
-        <strong>Q: How do florists ensure freshness during rapid transit?</strong>
-        <em>A: Logistics involve "Cold Chain" management—bouquets are kept at a steady 34-38°F until the moment they enter the delivery vehicle.</em>
-    </div>
-    <div class='qa-item'>
-        <strong>Q: Can I get same-day delivery on Sundays?</strong>
-        <em>A: Sunday logistics are limited. While major holidays like Mother's Day have full Sunday support, a standard Sunday usually requires a Saturday pre-order.</em>
-    </div>
-    <div class='qa-item'>
-        <strong>Q: Why is there a service fee for same-day fulfillment?</strong>
-        <em>A: The fee covers the "on-demand" routing of local couriers and the immediate priority handling by the floral designer.</em>
-    </div>
-    <div class='qa-item'>
-        <strong>Q: Are the flowers in a box or hand-delivered?</strong>
-        <em>A: Radical Transparency: Our logistics focus on "Hand-Delivered" artisan bouquets. Unlike boxed flowers, these are pre-arranged and never dehydrated for shipping.</em>
-    </div>
-    <div class='qa-item'>
-        <strong>Q: What happens if the recipient isn't home?</strong>
-        <em>A: Couriers follow "Secure-Drop" protocols—leaving the arrangement in a shaded spot or with a neighbor and sending an immediate digital confirmation.</em>
-    </div>
-    <div class='qa-item'>
-        <strong>Q: Does "Same-Day" include custom arrangements?</strong>
-        <em>A: Yes, but logistics favor seasonal blooms. For the fastest turnaround, selecting a "Designer's Choice" allows the florist to use their freshest stock immediately.</em>
-    </div>
-    <div class='qa-item'>
-        <strong>Q: How are delivery routes optimized?</strong>
-        <em>A: We use GPS-integrated dispatching that clusters orders by zip code to reduce time spent in the van, ensuring the flowers spend more time on the table than on the road.</em>
-    </div>
-    <div class='qa-item'>
-        <strong>Q: Is there a way to track the delivery in real-time?</strong>
-        <em>A: Most 2026 logistics platforms send an SMS notification once the driver has left the shop and a final photo confirmation upon arrival.</em>
-    </div>
-    <div class='qa-item'>
-        <strong>Q: Do same-day flowers last as long as standard delivery?</strong>
-        <em>A: Often longer. Because they skip the 24-48 hour sorting facility process used by national carriers, they arrive at the home closer to their harvest date.</em>
-    </div>
-  </div>
+<p>Same-day delivery in {city}, {state}</p>
 
-  <footer>
-    <p>&copy; 2026 Same Day Flowers | Brightlane Affiliate Network | Built for speed and freshness.</p>
-  </footer>
+<a href="{AFF_URL}">
+Order Flowers
+</a>
+
 </body>
-</html>
+</html>"""
+
+    with open(path, "w", encoding="utf-8") as f:
+        f.write(html)
+
+    return filename
+
+# =========================
+# SITEMAP CHUNKS
+# =========================
+def generate_sitemaps(cities):
+    chunks = math.ceil(len(cities) / CHUNK_SIZE)
+    files = []
+
+    for i in range(chunks):
+        part = cities[i * CHUNK_SIZE:(i + 1) * CHUNK_SIZE]
+        name = f"part-{i+1}.xml"
+        path = os.path.join(SITEMAP_DIR, name)
+
+        with open(path, "w", encoding="utf-8") as f:
+            f.write('<?xml version="1.0" encoding="UTF-8"?>\n')
+            f.write('<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n')
+
+            for c in part:
+                url = f"{BASE_URL}/{PROJECT_DIR}/flowers-{slug(c['city'], c['state'])}.html"
+                f.write(f"<url><loc>{url}</loc><lastmod>{TODAY}</lastmod></url>\n")
+
+            f.write("</urlset>")
+
+        files.append(name)
+
+    return files
+
+# =========================
+# SITEMAP INDEX
+# =========================
+def generate_sitemap_index(files):
+    path = "sitemap.xml"
+
+    with open(path, "w", encoding="utf-8") as f:
+        f.write('<?xml version="1.0" encoding="UTF-8"?>\n')
+        f.write('<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n')
+
+        for file in files:
+            f.write("<sitemap>\n")
+            f.write(f"<loc>{BASE_URL}/{SITEMAP_DIR}/{file}</loc>\n")
+            f.write(f"<lastmod>{TODAY}</lastmod>\n")
+            f.write("</sitemap>\n")
+
+        f.write("</sitemapindex>")
+
+# =========================
+# LLMs.TXT GENERATOR
+# =========================
+def generate_llms(cities):
+    path = "llms.txt"
+
+    content = f"""# SameDayFlowers AI Index
+Affiliate ID: {AFFILIATE_ID}
+
+## Top Cities
+"""
+
+    for c in cities[:500]:
+        url = f"{BASE_URL}/{PROJECT_DIR}/flowers-{slug(c['city'], c['state'])}.html"
+        content += f"- {c['city']}, {c['state']} → {url}\n"
+
+    content += f"\n## Affiliate Link\n{AFF_URL}\n"
+
+    with open(path, "w", encoding="utf-8") as f:
+        f.write(content)
+
+# =========================
+# SCHEMA.ORG GENERATOR
+# =========================
+def generate_schema():
+    schema = {
+        "@context": "https://schema.org",
+        "@type": "Florist",
+        "name": "SameDayFlowers",
+        "url": BASE_URL,
+        "telephone": "+1-800-FLORIST",
+        "priceRange": "$$",
+        "areaServed": ["US", "CA"],
+        "potentialAction": {
+            "@type": "OrderAction",
+            "target": AFF_URL
+        }
+    }
+
+    with open("schema.json", "w", encoding="utf-8") as f:
+        json.dump(schema, f, indent=2)
+
+# =========================
+# MAIN PIPELINE
+# =========================
+if __name__ == "__main__":
+    ensure_dirs()
+
+    with open("cities.json", "r", encoding="utf-8") as f:
+        cities = json.load(f)
+
+    print("🚀 Generating Pages...")
+    for c in cities[:2000]:
+        generate_page(c["city"], c["state"])
+
+    print("🗺 Generating Sitemaps...")
+    parts = generate_sitemaps(cities)
+
+    print("📌 Generating Sitemap Index...")
+    generate_sitemap_index(parts)
+
+    print("🤖 Generating llms.txt...")
+    generate_llms(cities)
+
+    print("🧬 Generating Schema.org...")
+    generate_schema()
+
+    print("✅ BUILD COMPLETE — Affiliate ID ACTIVE:", AFFILIATE_ID)
