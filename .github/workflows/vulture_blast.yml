@@ -5,7 +5,6 @@ on:
     - cron: '0 5 * * *'
   workflow_dispatch:
 
-# CRITICAL: Grant permission to write back to the repo
 permissions:
   contents: write
 
@@ -21,32 +20,30 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.10'
-          cache: 'pip' # Automated caching of dependencies
 
       - name: Force Install and Run
         run: |
+          # Use the full path to the python binary provided by the action
           python -m pip install --upgrade pip
           python -m pip install requests
           
-          # Run Generator first to ensure files exist for the Blast
+          # Verify installation in the logs so we can see it
+          python -c "import requests; print('✅ Requests is officially installed')"
+          
+          # Run the generator
           python vulture_generator.py
           
-          # Run the Blast
+          # Run the blast
           python sdf_bing_blast.py
 
       - name: Commit and Push Changes
-        # This prevents the bot from failing if the script didn't change any files
         run: |
           git config --global user.name "Vulture-Bot"
           git config --global user.email "actions@github.com"
-          
-          # Only add specific folders to keep the repo clean
-          git add blog/ sitemap.xml llms.txt robots.txt
-          
-          # Improved commit logic to handle "nothing to commit" cleanly
+          git add .
           if [ -n "$(git status --porcelain)" ]; then
-            git commit -m "Vulture Engine: Daily Velocity Update [$(date +'%Y-%m-%d')]"
+            git commit -m "Vulture Engine: Daily Update [$(date +'%Y-%m-%d')]"
             git push
           else
-            echo "No changes detected in city pages. Skipping push."
+            echo "No changes to commit"
           fi
