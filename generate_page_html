@@ -1,93 +1,75 @@
-def generate_page_html(city, state):
+import os
+
+def generate_page_html(city, state, config, BASE_URL, PROJECT_DIR, DEADLINE, MANYCHAT_LINK):
     filename = f"flowers-{city.lower().replace(' ', '-')}-{state.lower()}.html"
     page_url = f"{BASE_URL}/{PROJECT_DIR}/{filename}"
-    
-    # We use the ManyChat Bridge link from your affiliate.json
-    # The 'ref' includes your partner ID: nwkkk7vkps17
-    
+
+    affiliate_id = config.get("affiliate_id", "2013017799")
+    partner_id = config.get("manychat_partner_id", "")
+
     html_content = f"""<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Same Day Mother's Day Flowers {city}, {state} | Local Delivery</title>
-    <meta name="description" content="Send Mother's Day flowers in {city}, {state}. Guaranteed delivery by {DEADLINE}. $0 service fees. Local {city} florists.">
+    <title>Same Day Flowers {city}, {state} | Local Delivery</title>
+
+    <meta name="description" content="Send Mother's Day flowers in {city}, {state}. Guaranteed delivery by {DEADLINE}.">
     <link rel="canonical" href="{page_url}">
-    
-    <!-- GEO Tags for Local SEO -->
+
     <meta name="geo.region" content="US-{state.upper()}">
     <meta name="geo.placename" content="{city}">
-    <meta name="geo.position" content="31.054487;-97.563461"> <!-- Standard US Center, can be refined -->
-    <meta name="ICBM" content="31.054487, -97.563461">
 
     <style>
-        :root {{ --primary: #ff4d6d; --dark: #1a1a1a; --light: #fff5f7; }}
-        body {{ font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin: 0; color: var(--dark); line-height: 1.6; background: #fff; }}
-        .panic-bar {{ background: var(--primary); color: white; text-align: center; padding: 12px; font-weight: bold; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }}
-        nav {{ display: flex; justify-content: space-between; align-items: center; padding: 15px 5%; border-bottom: 1px solid #eee; background: white; }}
-        .hero {{ background: var(--light); padding: 60px 5%; text-align: center; border-bottom: 1px solid #ffe0e6; }}
-        .hero h1 {{ font-size: 2.5rem; margin-bottom: 10px; color: #c9184a; }}
-        .transparency-box {{ background: white; border: 1px dashed var(--primary); padding: 15px; max-width: 500px; margin: 20px auto; border-radius: 8px; font-size: 0.9rem; }}
-        .btn {{ background: var(--primary); color: white; padding: 22px 50px; text-decoration: none; border-radius: 50px; font-weight: 800; display: inline-block; font-size: 1.3rem; box-shadow: 0 4px 15px rgba(255, 77, 109, 0.4); transition: transform 0.2s; }}
-        .btn:hover {{ transform: scale(1.05); background: #ff758f; }}
-        main {{ padding: 50px 5%; max-width: 900px; margin: auto; }}
-        .trust-badges {{ display: flex; justify-content: space-around; margin-top: 40px; font-size: 0.8rem; color: #666; }}
-        footer {{ background: #f8f9fa; padding: 60px 5%; text-align: center; font-size: 0.85rem; border-top: 1px solid #eee; }}
-        .affiliate-tag {{ color: #999; margin-top: 20px; display: block; }}
+        body {{ font-family: Arial; margin:0; background:#fff; }}
+        .btn {{
+            background:#ff4d6d;
+            color:#fff;
+            padding:18px 40px;
+            display:inline-block;
+            text-decoration:none;
+            border-radius:50px;
+            font-weight:bold;
+        }}
     </style>
 </head>
+
 <body>
-    <div class="panic-bar">⚠️ MOTHER'S DAY ORDER WINDOW CLOSING SOON — {city.upper()} DELIVERY AVAILABLE</div>
-    
-    <nav>
-        <a href="../index.html" style="color:var(--primary); text-decoration:none; font-weight:800; font-size: 1.2rem;">SameDayFlowers</a>
-        <div style="font-size: 0.8rem; background: #eee; padding: 5px 10px; border-radius: 4px;">Status: Local Dispatch Active</div>
-    </nav>
 
-    <header class="hero">
-        <h1>Send Mother's Day Flowers in {city}</h1>
-        <p style="font-size: 1.2rem; color: #555;">Hand-picked and delivered by the best local florists in {city}, {state}.</p>
-        
-        <!-- Radical Transparency Component -->
-        <div class="transparency-box">
-            <strong>Live Availability for {city}:</strong> <span style="color: green;">● High Supply</span><br>
-            Guaranteed Fresh Delivery by Sunday, May 10th.<br>
-            <small>Note: Capacity is limited. Orders are processed on a first-come, first-served basis.</small>
-        </div>
+    <header style="text-align:center;padding:60px 20px;">
+        <h1>Flowers in {city}</h1>
+        <p>Delivered same-day by local florists in {state}</p>
 
-        <a href="{MANYCHAT_LINK}" class="btn">CHECK {city.upper()} AVAILABILITY</a>
-        
-        <div class="trust-badges">
-            <span>✓ $0 Service Fees</span>
-            <span>✓ Real-Time Tracking</span>
-            <span>✓ Local {state} Florists</span>
-        </div>
+        <!-- PRIMARY CTA = AFFILIATE (FIXED) -->
+        <a class="btn"
+           href="http://www.floristone.com/main.cfm?AffiliateID={affiliate_id}&source_id=brightlane&occ=mothersday">
+           BUY FLOWERS NOW
+        </a>
+
+        <br><br>
+
+        <!-- SECONDARY CTA = MANYCHAT -->
+        <a class="btn" style="background:#444;"
+           href="{MANYCHAT_LINK}">
+           CHECK AVAILABILITY
+        </a>
     </header>
 
-    <main>
-        <section>
-            <h2>How Our {city} Flower Delivery Works</h2>
-            <p>We've streamlined the floral delivery process for Mother's Day 2026. By using our <strong>ManyChat-Verified Bridge</strong>, your order is instantly routed to a professional florist in {city} who specializes in Mother's Day arrangements.</p>
-            <ul>
-                <li><strong>Step 1:</strong> Select your city and choose a bouquet.</li>
-                <li><strong>Step 2:</strong> Our automated system confirms local {city} inventory.</li>
-                <li><strong>Step 3:</strong> A local professional hand-delivers your gift with a 100% freshness guarantee.</li>
-            </ul>
-        </section>
+    <main style="padding:40px;text-align:center;">
+        <p>Local dispatch network active in {city}, {state}.</p>
     </main>
 
-    <footer>
-        <div style="margin-bottom: 20px;">
-            <a href="../index.html" style="margin: 0 10px; text-decoration: none; color: #444;">Home</a> | 
-            <a href="../llms.txt" style="margin: 0 10px; text-decoration: none; color: #444;">AI Index (llms.txt)</a>
-        </div>
-        <p>© 2026 SameDayFlowers Network. All Rights Reserved.</p>
-        <span class="affiliate-tag">Partner ID: {config['manychat_partner_id']}</span>
+    <footer style="text-align:center;padding:40px;font-size:12px;color:#888;">
+        Affiliate ID: {affiliate_id} | Partner: {partner_id}
     </footer>
+
 </body>
 </html>"""
-    
+
     file_path = os.path.join(PROJECT_DIR, filename)
+    os.makedirs(PROJECT_DIR, exist_ok=True)
+
     with open(file_path, "w", encoding="utf-8") as f:
         f.write(html_content)
+
     return filename
