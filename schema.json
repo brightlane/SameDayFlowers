@@ -1,62 +1,54 @@
 {
   "@context": "https://schema.org",
   "@type": "Florist",
+  "@id": "https://brightlane.github.io/SameDayFlowers/#business",
   "name": "SameDayFlowers",
   "url": "https://brightlane.github.io/SameDayFlowers/",
   "logo": "https://brightlane.github.io/SameDayFlowers/logo.png",
   "image": "https://brightlane.github.io/SameDayFlowers/featured-flower.jpg",
   "description": "Premium same-day flower delivery across the USA and Canada. Enjoy free delivery and $0 service fees starting from $29.99. Highly rated by over 18,000 customers.",
-  "telephone": "+1-800-FLORIST",
+
+  "telephone": "+1-800-356-7747",
+
   "priceRange": "$$",
+
   "address": {
     "@type": "PostalAddress",
     "addressCountry": "US"
   },
+
   "areaServed": [
-    {
-      "@type": "Country",
-      "name": "US"
-    },
-    {
-      "@type": "Country",
-      "name": "CA"
-    }
+    { "@type": "Country", "name": "US" },
+    { "@type": "Country", "name": "CA" }
   ],
+
   "aggregateRating": {
     "@type": "AggregateRating",
-    "ratingValue": "4.8",
-    "reviewCount": "18742",
-    "bestRating": "5",
-    "worstRating": "1"
+    "ratingValue": 4.8,
+    "reviewCount": 18742,
+    "bestRating": 5,
+    "worstRating": 1
   },
-  "provider": {
-    "@type": "Organization",
-    "name": "Floristone",
-    "url": "https://www.floristone.com"
-  },
+
   "offers": {
     "@type": "AggregateOffer",
-    "lowPrice": "29.99",
-    "highPrice": "150.00",
+    "lowPrice": 29.99,
+    "highPrice": 150.00,
     "priceCurrency": "USD",
-    "offerCount": "100",
-    "availability": "https://schema.org/InStock",
-    "seller": {
-      "@type": "Organization",
-      "name": "SameDayFlowers"
-    }
+    "offerCount": 100,
+    "availability": "https://schema.org/InStock"
   },
+
   "potentialAction": {
     "@type": "OrderAction",
     "target": {
       "@type": "EntryPoint",
-      "urlTemplate": "https://www.floristone.com/main.cfm?occ=md&source_id=aff&AffiliateID=21885",
+      "urlTemplate": "https://www.floristone.com/main.cfm?occ=md&source_id=aff&AffiliateID=2013017799",
       "inLanguage": "en-US",
       "actionPlatform": [
         "http://schema.org/DesktopWebPlatform",
         "http://schema.org/MobileWebPlatform"
       ]
-    },
-    "deliveryMethod": "http://purl.org/goodrelations/v1#DeliveryModeDirectOutbound"
+    }
   }
 }
