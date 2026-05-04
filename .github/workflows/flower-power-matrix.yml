@@ -1,90 +1,83 @@
-name: Flower Power Daily Matrix
+name: Vulture 10K Daily Engine
 
 on:
   schedule:
-    - cron: "0 9 * * *" # Runs at 9:00 AM daily
-  workflow_dispatch: {} # Manual "Run" button
+    - cron: "0 9 * * *" # Daily at 9:00 AM
+  workflow_dispatch: # Manual "Go" Button
 
 permissions:
   contents: write
 
 jobs:
-  build-and-broadcast:
+  run-vulture-matrix:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Generate High-Velocity Content
-        run: |
-          # 1. Topic & FAQ Arrays
-          TOPICS=("Luxury Floral Arrangements" "Last-Minute Sympathy Flowers" "The Science of Bloom Freshness" "Same-Day Delivery Logistics")
-          SELECTED_TOPIC=${TOPICS[$RANDOM % ${#TOPICS[@]}]}
-          
-          # Quora-style Question/Answer Database
-          QUESTIONS=(
-            "How can I ensure flowers are delivered today?|Simply order through FloristOne before 1 PM local time."
-            "Is same-day flower delivery worth the cost?|Absolutely, especially when you need a fresh, hand-delivered gesture instantly."
-            "What are the best flowers for a sudden anniversary?|Red roses and lilies are top-tier choices for immediate impact."
-            "Does FloristOne deliver to rural areas?|Yes, our network of over 20,000 local florists covers the USA and Canada extensively."
-            "Can I add a personalized message to my order?|Every hand-delivered bouquet includes a card for your custom note."
-          )
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+          cache: 'pip'
 
-          # 2. Build the HTML with 10,000-word potential structure
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          pip install requests # Hard-coded safety for IndexNow scripts
+
+      - name: Update Daily Assets
+        run: |
+          # 1. Topic Selection for Index Velocity
+          TOPICS=("Last Minute Birthday Bouquets" "Same Day Sympathy Flowers" "Express Anniversary Roses" "Hand-Delivered Get Well Gifts" "Mother's Day Panic Window 2026")
+          SELECTED_TOPIC="${TOPICS[$RANDOM % ${#TOPICS[@]}]}"
+          echo "SELECTED_TOPIC=$SELECTED_TOPIC" >> $GITHUB_ENV
+          
+          # 2. Define Shared Footer with CORRECT Affiliate ID: 2013017799
+          FOOTER="<footer style='margin-top:50px; padding:20px; border-top:1px solid #ddd; text-align:center; font-family:sans-serif;'>
+            <nav>
+              <a href='index.html'>Home</a> | 
+              <a href='blog.html'>Daily Blog</a> | 
+              <a href='faq.html'>FAQ</a> | 
+              <a href='sitemap.xml'>Sitemap</a> |
+              <a href='llms.txt'>AI Context</a>
+            </nav>
+            <p>👉 <a href='https://www.floristone.com/main.cfm?occ=md&source_id=aff&AffiliateID=2013017799'><strong>Order Same-Day Flowers via FloristOne</strong></a></p>
+          </footer>"
+
+          # 3. Generate Daily blog.html
           cat > blog.html << EOF
           <!DOCTYPE html>
-          <html lang="en">
+          <html>
           <head>
-            <meta charset="UTF-8">
             <title>Same Day Flowers - $SELECTED_TOPIC</title>
-            <style>
-              body { font-family: 'Segoe UI', sans-serif; line-height: 1.8; max-width: 900px; margin: auto; padding: 30px; background: #fffcfd; color: #333; }
-              .cta-button { background: #e91e63; color: white; padding: 20px 40px; text-decoration: none; border-radius: 50px; font-weight: bold; display: inline-block; margin: 20px 0; }
-              .quora-section { background: #f7f7f7; border-left: 4px solid #b92b27; padding: 20px; margin-top: 40px; }
-              .qa-item { margin-bottom: 25px; border-bottom: 1px solid #ddd; padding-bottom: 10px; }
-              .qa-item strong { color: #b92b27; }
-              h1, h2 { color: #ad1457; }
-            </style>
+            <style>body{font-family:sans-serif; line-height:1.6; max-width:800px; margin:auto; padding:20px;}</style>
           </head>
           <body>
-            <h1>$SELECTED_TOPIC: The 2026 Same-Day Delivery Guide</h1>
-            <p>Welcome to the ultimate resource for sending fresh blooms. Today we are focusing on <strong>$SELECTED_TOPIC</strong>...</p>
-            
-            <div style="text-align:center;">
-              <a href="https://www.floristone.com/index.cfm?source_id=aff&AffiliateID=2013017799" class="cta-button">Order Today's Fresh Selection Now</a>
-            </div>
-
-            <h2>Expert Q&A - Featured on Quora & Beyond</h2>
-            <div class="quora-section">
+            <h1>$SELECTED_TOPIC: 2026 Delivery Guide</h1>
+            <p>Our daily update for $(date +'%Y-%m-%d') focuses on securing premium, hand-delivered blooms. Fast fulfillment is critical for $SELECTED_TOPIC.</p>
+            $FOOTER
+          </body>
+          </html>
           EOF
 
-          # 3. Loop to inject Quora Questions
-          for i in {1..10}; do
-            RAW=${QUESTIONS[$RANDOM % ${#QUESTIONS[@]}]}
-            Q=$(echo \$RAW | cut -d'|' -f1)
-            A=$(echo \$RAW | cut -d'|' -f2)
-            echo "<div class='qa-item'><strong>Q: $Q</strong><br><em>A: $A</em></div>" >> blog.html
-          done
-
-          echo "</div><footer><p>&copy; 2026 Same Day Flowers. Built for speed and freshness.</p></footer></body></html>" >> blog.html
-
-      - name: Commit Content
+      - name: Execute Vulture Core Scripts
         run: |
-          git config user.name "SocialBot"
-          git config user.email "bot@brightlane.dev"
-          git add blog.html
-          git commit -m "Daily Matrix Update: $SELECTED_TOPIC" || echo "No changes"
-          git push
+          # Only runs scripts if they exist in the current repo
+          if [ -f vulture_generator.py ]; then python vulture_generator.py; fi
+          if [ -f generate_llms_txt.py ]; then python generate_llms_txt.py; fi
+          if [ -f sdf_bing_blast.py ]; then python sdf_bing_blast.py; fi
+          if [ -f blast_to_bing.py ]; then python blast_to_bing.py; fi
 
-      - name: Social Media Hook
+      - name: Commit and Push Changes
         run: |
-          # This sends the update to a webhook (Connect this to Zapier, n8n, or Postiz)
-          # It includes the Quora-style question for social engagement
-          curl -X POST ${{ secrets.SOCIAL_WEBHOOK_URL }} \
-          -H "Content-Type: application/json" \
-          -d "{
-            \"title\": \"New Flower Delivery Guide: $SELECTED_TOPIC\",
-            \"link\": \"https://brightlane.github.io/SameDayFlowers/blog.html\",
-            \"social_caption\": \"Sending flowers today? Check out our latest guide and Quora Q&A! #SameDayFlowers #GiftIdeas\",
-            \"affiliate_link\": \"https://www.floristone.com/index.cfm?source_id=aff&AffiliateID=2013017799\"
-          }" || echo "Webhook not configured, skipping social post."
+          git config user.name "Vulture-Bot"
+          git config user.email "actions@github.com"
+          git add .
+          if [ -n "$(git status --porcelain)" ]; then
+            git commit -m "Vulture Engine Sync: $SELECTED_TOPIC"
+            git push
+          else
+            echo "No changes detected."
+          fi
