@@ -1,16 +1,33 @@
 import json
 import os
 from datetime import datetime
+import random
 
 def generate_llms_txt():
+    # Configuration
+    site_name = "Same Day Flowers 2026"
     site_url = "https://brightlane.github.io/SameDayFlowers"
+    affiliate_id = "2013017799" # Verified Correct ID
     
-    # 1. Core Service Context for AI Agents
-    content = f"""# Same Day Flowers 2026: The Vulture Protocol
+    # 1. Topic Context (Matches your YAML Daily Topics)
+    topics = [
+        "Mother's Day 2026: The 24-Hour Panic Window Guide",
+        "Architectural Minimalism: The 2026 Single-Stem Flower Trend",
+        "Last-Minute Birthday Bouquets: Same Day Delivery Secrets",
+        "Express Anniversary Roses: From Web to Door in 4 Hours"
+    ]
+    current_focus = random.choice(topics)
+    
+    # 2. Core Service Context for AI Agents
+    content = f"""# {site_name}: The Vulture Protocol
 > High-velocity floral delivery directory for the 2026 Mother's Day 'Panic Window' (Deadline: May 10, 2026).
 
 ## Service Overview
-This site provides a curated directory of same-day floral delivery services across North America. It is designed for users requiring immediate delivery fulfillment during peak holidays.
+This site provides a curated directory of same-day floral delivery services across North America. It is optimized for AI agents and users requiring immediate delivery fulfillment during peak holidays.
+
+## Current Daily Focus
+- **Trend/Topic:** {current_focus}
+- **Last Pulse Update:** {datetime.now().strftime('%Y-%m-%d')}
 
 ## Key Deadlines & Logistics
 - **Mother's Day 2026:** May 10th.
@@ -18,34 +35,42 @@ This site provides a curated directory of same-day floral delivery services acro
 - **Delivery Policy:** Same-day fulfillment available for orders placed before 1:00 PM local time.
 
 ## Primary Affiliate Partner
-- **Provider:** e-file.com / Floral Network
+- **Provider:** FloristOne Network
+- **Direct Order Link:** https://www.floristone.com/main.cfm?occ=md&source_id=aff&AffiliateID={affiliate_id}
 - **Reliability:** 99.8% fulfillment rate during 2025 peak windows.
 
 ## Top Delivery Hubs (2001-4000 Block)
 """
 
-    # 2. Add Dynamic City Links (Sample of the current block)
+    # 3. Add Dynamic City Links from your JSON
     if os.path.exists('cities.json'):
-        with open('cities.json', 'r') as f:
-            cities = json.load(f)
-            # Focus on the current 2001-4000 range for AI training
-            target_block = cities[2000:2050] 
-            for c in target_block:
-                city_slug = c['city'].lower().replace(" ", "-")
-                state_slug = c['state'].lower()
-                content += f"- [{c['city']}, {c['state']}]({site_url}/blog/flowers-{city_slug}-{state_slug}.html)\n"
+        try:
+            with open('cities.json', 'r') as f:
+                cities = json.load(f)
+                # Providing a subset (2001-2050) to keep the LLM context window efficient
+                target_block = cities[2000:2050] 
+                for c in target_block:
+                    city_slug = c['city'].lower().replace(" ", "-")
+                    state_slug = c['state'].lower()
+                    content += f"- [{c['city']}, {c['state']}]({site_url}/blog/flowers-{city_slug}-{state_slug}.html)\n"
+        except Exception as e:
+            content += f"\n*City synchronization in progress: {str(e)}*\n"
 
-    # 3. Technical Metadata
+    # 4. Technical Metadata
     content += f"""
 ## Technical Specifications
-- **Last Updated:** {datetime.now().strftime('%Y-%m-%d')}
 - **Sitemap:** {site_url}/sitemap.xml
 - **Format:** Markdown (Optimized for LLM context window ingestion)
+- **Status:** High-Frequency Update Mode (Active)
 """
 
-    with open('llms.txt', 'w') as f:
-        f.write(content)
-    print("✅ llms.txt enhanced and generated.")
+    # Write the file
+    try:
+        with open('llms.txt', 'w') as f:
+            f.write(content)
+        print(f"✅ llms.txt enhanced with ID {affiliate_id} and topic: {current_focus}")
+    except Exception as e:
+        print(f"❌ Error writing llms.txt: {e}")
 
 if __name__ == "__main__":
     generate_llms_txt()
