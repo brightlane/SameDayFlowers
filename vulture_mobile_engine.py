@@ -1,89 +1,56 @@
 import os
-import random
-import datetime
-import urllib.request
 import json
+import random
 
-# --- CONFIGURATION (UPDATE BASE_URL FOR REPO 5) ---
-BASE_URL = "https://brightlane.github.io/Flowers-Now-Mobile"
-PROJECT_DIR = "app"
-INDEX_NOW_KEY = "fd610116b1404d65a8250c0b5cc86a23" 
-AFFILIATE_ID = "2013017799" 
+# --- CONFIGURATION ---
+BASE_URL = "https://brightlane.github.io/FastFlowers"
+AFFILIATE_ID = "2013017799"
 MANYCHAT_LINK = f"https://m.me/brightlane?ref={AFFILIATE_ID}"
 
-# --- THE VULTURE 100: MOBILE & "NEAR ME" INTENT ---
-ACTIONS = ["Send", "Order", "Find", "Get", "Buy"]
-SUBJECTS = ["Flowers Near Me", "Same Day Bouquet", "Local Delivery", "Mother's Day Flowers", "Flower Shop"]
-URGENCY = ["Open Now", "Delivering Today", "Instant", "Verified", "Fast"]
-
-HOOKS = [f"{s} in {{city}} - {u}" for a in ACTIONS for s in SUBJECTS for u in URGENCY]
-
-def generate_page_html(city, state):
-    title_hook = random.choice(HOOKS).format(city=city)
-    filename = f"now-{city.lower().replace(' ', '-')}-{state.lower()}.html"
+def generate_mobile_bridge(city, state):
+    filename = f"get-{city.lower().replace(' ', '-')}.html"
     
-    html_content = f"""<!DOCTYPE html>
+    # Random "Social Proof" numbers for the Panic Window
+    viewers = random.randint(45, 120)
+    
+    html = f"""<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>{title_hook}</title>
+    <title>Priority Dispatch: {city}</title>
     <style>
-        body {{ font-family: -apple-system, system-ui, sans-serif; background: #ffffff; color: #1a1a1a; margin: 0; padding: 0; }}
-        .app-container {{ padding: 20px; text-align: center; }}
-        .nav-header {{ background: #fdf2f8; padding: 15px; border-bottom: 1px solid #fce7f3; display: flex; align-items: center; justify-content: center; }}
-        .dot {{ height: 8px; width: 8px; background-color: #ec4899; border-radius: 50%; display: inline-block; margin-right: 8px; animation: blink 1s infinite; }}
-        @keyframes blink {{ 0% {{ opacity: 1; }} 50% {{ opacity: 0.3; }} 100% {{ opacity: 1; }} }}
-        h1 {{ font-size: 1.5rem; margin: 25px 0 10px 0; color: #831843; }}
-        .meta-info {{ font-size: 0.9rem; color: #6b7280; margin-bottom: 30px; }}
-        .action-card {{ background: #fff1f2; border: 1.5px solid #fb7185; border-radius: 16px; padding: 25px; margin-bottom: 20px; }}
-        .cta-btn {{ display: block; background: #e11d48; color: #fff; text-align: center; padding: 20px; text-decoration: none; font-weight: bold; border-radius: 50px; font-size: 1.2rem; box-shadow: 0 4px 6px -1px rgba(225, 29, 72, 0.4); }}
-        .footer-note {{ font-size: 0.7rem; color: #9ca3af; margin-top: 40px; padding: 20px; border-top: 1px solid #f3f4f6; }}
+        body {{ font-family: -apple-system, sans-serif; background: #fff; margin: 0; display: flex; align-items: center; justify-content: center; height: 100vh; overflow: hidden; }}
+        .bridge-container {{ width: 90%; text-align: center; border: 2px solid #000; padding: 30px 15px; border-radius: 20px; }}
+        .status-dot {{ height: 10px; width: 10px; background: #22c55e; border-radius: 50%; display: inline-block; animation: pulse 1s infinite; }}
+        @keyframes pulse {{ 0% {{ opacity: 1; }} 50% {{ opacity: 0.4; }} 100% {{ opacity: 1; }} }}
+        h1 {{ font-size: 1.4rem; margin: 15px 0; }}
+        .live-counter {{ font-size: 0.8rem; color: #ef4444; font-weight: bold; margin-bottom: 20px; }}
+        .cta-mobile {{ background: #000; color: #fff; text-decoration: none; padding: 20px; display: block; border-radius: 12px; font-weight: bold; font-size: 1.1rem; text-transform: uppercase; }}
+        .secure-lock {{ margin-top: 15px; font-size: 0.7rem; color: #9ca3af; }}
     </style>
 </head>
 <body>
-    <div class="nav-header">
-        <span class="dot"></span> <span style="font-size: 0.75rem; font-weight: bold; color: #be185d;">LIVE DELIVERY UPDATES: {city.upper()}</span>
-    </div>
-    <div class="app-container">
-        <h1>{title_hook}</h1>
-        <p class="meta-info">Top local floral couriers in {city} are currently accepting same-day orders.</p>
+    <div class="bridge-container">
+        <div class="status-dot"></div> <span style="font-size: 0.8rem; font-weight: bold;">LIVE DISPATCH: {city.upper()}</span>
+        <h1>Mother's Day Inventory Found</h1>
+        <div class="live-counter">🔥 {viewers} others are looking at {city} florists right now.</div>
         
-        <div class="action-card">
-            <div style="font-size: 0.8rem; color: #e11d48; font-weight: bold; margin-bottom: 10px;">AVAILABLE FOR {city.upper()} TODAY</div>
-            <div style="font-size: 2rem; font-weight: bold; margin-bottom: 15px;">$39.00+</div>
-            <a href="{MANYCHAT_LINK}" class="cta-btn">ORDER ON MESSENGER</a>
-        </div>
-
-        <p style="font-size: 0.8rem;">Tap above to check real-time stock and secure your delivery slot for {city}.</p>
+        <a href="{MANYCHAT_LINK}" class="cta-mobile">Claim Delivery Slot</a>
         
-        <div class="footer-note">
-            This "Near Me" guide is an affiliate-supported service. We help you find local florists in {city} and may receive a commission on successful orders.
-        </div>
+        <div class="secure-lock">🔒 Secured by ManyChat & FloristOne</div>
     </div>
 </body>
 </html>"""
-    
-    with open(f"{PROJECT_DIR}/{filename}", "w", encoding="utf-8") as f:
-        f.write(html_content)
-    return filename
 
-def update_sitemap():
-    today = datetime.date.today().isoformat()
-    all_files = [f for f in os.listdir(PROJECT_DIR) if f.endswith('.html')]
-    with open("sitemap.xml", "w", encoding="utf-8") as f:
-        f.write('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n')
-        for name in all_files:
-            f.write(f'  <url><loc>{BASE_URL}/{PROJECT_DIR}/{name}</loc><lastmod>{today}</lastmod></url>\n')
-        f.write('</urlset>')
+    with open(f"now/{filename}", "w", encoding="utf-8") as f:
+        f.write(html)
 
 if __name__ == "__main__":
-    if not os.path.exists(PROJECT_DIR): os.makedirs(PROJECT_DIR)
-    
-    # Global Catch-All Block: Top 2,000 cities again (or a new random mix)
+    if not os.path.exists('now'): os.makedirs('now')
     with open('cities.json', 'r') as f:
-        cities = json.load(f)[0:2000]
-
-    print(f"🚀 Deploying Block 1-2000 (Mobile-First UI)...")
-    new_files = [generate_page_html(c['city'], c['state']) for c in cities]
-    update_sitemap()
+        cities = json.load(f)[:2000] # Target Top 2000 Cities
+    
+    for c in cities:
+        generate_mobile_bridge(c['city'], c['state'])
+    print("🚀 Mobile Bridge Pages Generated in /now/")
