@@ -1,18 +1,65 @@
 {
-  "project": "SameDayFlowers Mother's Day 2026",
-  "affiliate_manager": "brightlane",
-  "manychat_partner_id": "nwkkk7vkps17",
+  "network": "floristone",
+  "affiliate_id": "2013017799",
+
   "links": {
-    "partner_portal": "https://manychat.partnerlinks.io/nwkkk7vkps17",
-    "messenger_bridge": "https://m.me/brightlane?ref=nwkkk7vkps17",
-    "fallback_url": "https://brightlane.github.io/SameDayFlowers/"
+    "direct": "http://www.floristone.com/main.cfm?source_id=aff&AffiliateID=2013017799&occ=mothersday",
+    "manychat_entry": "https://m.me/brightlane?ref=nwkkk7vkps17",
+    "fallback": "https://brightlane.github.io/SameDayFlowers/"
   },
-  "parameters": {
-    "atid": "ProfessorOwlTaxGuide",
-    "campaign": "vulture_10k_mothers_day",
-    "panic_window_active": true,
-    "deadline_date": "2026-05-10"
+
+  "tracking": {
+    "source_id": "aff",
+    "AffiliateID": "2013017799",
+    "occ": "mothersday",
+    "campaign": "vulture_10k_mothers_day"
   },
-  "last_updated": "2026-05-04T15:22:00Z",
-  "vulture_engine_version": "3.0"
+
+  "routing_rules": {
+    "default": "direct",
+
+    "panic_window": {
+      "enabled": true,
+      "start_date": "2026-05-07",
+      "end_date": "2026-05-10",
+      "route": "manychat_entry"
+    },
+
+    "high_intent_keywords": [
+      "same day flowers",
+      "deliver flowers today",
+      "last minute flowers",
+      "mother's day flowers"
+    ],
+
+    "keyword_route": {
+      "match": "high_intent_keywords",
+      "route": "manychat_entry"
+    },
+
+    "device_rules": {
+      "mobile": "manychat_entry",
+      "desktop": "direct"
+    },
+
+    "traffic_split": {
+      "enabled": true,
+      "manychat_percentage": 40,
+      "direct_percentage": 60
+    }
+  },
+
+  "products": [
+    "Red Roses",
+    "Pink Peonies",
+    "Orchid Towers",
+    "Wildflower Baskets"
+  ],
+
+  "geo": {
+    "primary": "US",
+    "secondary": ["CA"]
+  },
+
+  "last_updated": "2026-05-04T00:00:00Z"
 }
