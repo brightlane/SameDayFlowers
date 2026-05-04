@@ -1,123 +1,148 @@
 import os
-import random
-import datetime
-import urllib.request
 import json
+import datetime
 
-# --- 1. CONFIGURATION ---
+# --- 1. THE REVENUE CORE ---
+# Verified Affiliate ID: 2013017799
 BASE_URL = "https://brightlane.github.io/SameDayFlowers"
 PROJECT_DIR = "blog"
-INDEX_NOW_KEY = "fd610116b1404d65a8250c0b5cc86a23" 
-AFFILIATE_ID = "2013017799" 
+AFFILIATE_ID = "2013017799"
 MANYCHAT_LINK = f"https://m.me/brightlane?ref={AFFILIATE_ID}"
 LLMS_AFF_LINK = f"https://www.floristone.com/main.cfm?occ=md&source_id=aff&AffiliateID={AFFILIATE_ID}"
 
-# --- 2. THE VULTURE 100: SEARCH INTENT MATRIX ---
-ACTIONS = ["Send", "Buy", "Order", "Shop", "Deliver", "Ship", "Purchase", "Find", "Get", "Book"]
-SUBJECTS = [
-    "Mother's Day Flowers", "Same Day Flowers", "Last Minute Bouquets", 
-    "Fresh Peonies", "Pink Roses", "Local Florists", "Floral Delivery", 
-    "Mother's Day Gifts", "Spring Tulips", "Luxury Arrangements"
-]
-URGENCY = ["Today", "Now", "by 1PM", "Guaranteed", "Fast", "Express", "Online", "Same Day", "Instant", "Last Minute"]
-
-HOOKS = [f"{a} {s} in {{city}} - {u}" for a in ACTIONS for s in SUBJECTS for u in URGENCY]
-KEYWORDS_2025 = [
-    "best mother's day flower delivery {city}", "cheap same day flowers {city}",
-    "local florist {city} delivery", "send flowers online {city} 2026",
-    "last minute gift delivery {city}", "mother's day bouquet same day {city}"
-]
-
-# --- 3. CORE ENGINE FUNCTIONS ---
-
+# --- 2. THE SEO & GEO ENGINE ---
 def generate_page_html(city, state):
-    """Generates individual city landing pages."""
-    title_hook = random.choice(HOOKS).format(city=city)
-    secondary_seo = random.choice(KEYWORDS_2025).format(city=city)
     filename = f"flowers-{city.lower().replace(' ', '-')}-{state.lower()}.html"
+    page_url = f"{BASE_URL}/{PROJECT_DIR}/{filename}"
     
     html_content = f"""<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{title_hook} | {city}, {state}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    
+    <!-- GLOBAL SEARCH OPTIMIZATION (Google, Bing, Yahoo, DuckDuckGo) -->
+    <title>Same Day Mother's Day Flowers {city}, {state} | Priority Delivery</title>
+    <meta name="description" content="Send Mother's Day flowers in {city}, {state}. Guaranteed delivery by May 10, 2026. Local {city} florists, $0 fees. Order today!">
+    <meta name="keywords" content="flowers {city}, florist {city} {state}, mother's day delivery {city}, same day flowers {city}">
+    <link rel="canonical" href="{page_url}">
+    
+    <!-- GEO-TARGETING FOR BING/YAHOO -->
+    <meta name="geo.region" content="US-{state.upper()}">
+    <meta name="geo.placename" content="{city}">
+    <meta name="geo.position" content="39.78373;-100.445882">
+    <meta name="ICBM" content="39.78373, -100.445882">
+
+    <!-- SOCIAL & MOBILE META (Facebook, TikTok, Safari) -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Mother's Day Flowers {city} - Local Delivery">
+    <meta property="og:description" content="Order by May 10, 2026. Local {city} flower delivery.">
+    <meta property="og:image" content="{BASE_URL}/og-image.jpg">
+    <meta name="twitter:card" content="summary_large_image">
+
+    <!-- AI SCHEMA (JSON-LD) -->
+    <script type="application/ld+json">
+    {{
+      "@context": "https://schema.org",
+      "@type": "Florist",
+      "name": "SameDayFlowers {city}",
+      "description": "Premium floral dispatch in {city}, {state}",
+      "url": "{page_url}",
+      "address": {{
+        "@type": "PostalAddress",
+        "addressLocality": "{city}",
+        "addressRegion": "{state.upper()}",
+        "addressCountry": "US"
+      }},
+      "priceRange": "$$",
+      "aggregateRating": {{ "@type": "AggregateRating", "ratingValue": "4.9", "reviewCount": "1250" }}
+    }}
+    </script>
+
     <style>
-        body {{ font-family: sans-serif; background: #0a192f; color: #ccd6f6; padding: 2rem; line-height: 1.6; }}
-        .vulture-card {{ max-width: 600px; margin: auto; background: #112240; border: 1px solid #233554; padding: 40px; border-radius: 12px; text-align: center; }}
-        .badge {{ background: #64ffda; color: #0a192f; padding: 5px 12px; border-radius: 4px; font-size: 0.8rem; font-weight: bold; text-transform: uppercase; }}
-        h1 {{ color: #ffffff; margin: 20px 0; font-size: 1.8rem; }}
-        .timer-box {{ background: #1d2d44; padding: 15px; border-left: 4px solid #ff4d4d; margin: 25px 0; color: #ff4d4d; font-weight: bold; }}
-        .cta {{ display: block; background: #64ffda; color: #0a192f; padding: 22px; text-decoration: none; font-weight: bold; border-radius: 8px; font-size: 1.4rem; }}
-        .footer {{ font-size: 0.7rem; opacity: 0.4; margin-top: 40px; border-top: 1px solid #233554; padding-top: 20px; }}
+        :root {{ --primary: #ff4d6d; --dark: #1a1a1a; --light: #f9f9f9; }}
+        body {{ font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; margin: 0; color: var(--dark); line-height: 1.6; -webkit-font-smoothing: antialiased; }}
+        .panic-bar {{ background: var(--primary); color: white; text-align: center; padding: 12px; font-weight: bold; font-size: 1rem; position: sticky; top: 0; z-index: 1000; }}
+        nav {{ display: flex; justify-content: space-between; align-items: center; padding: 15px 5%; border-bottom: 1px solid #eee; background: white; }}
+        .logo {{ font-weight: 800; font-size: 1.4rem; color: var(--primary); text-decoration: none; }}
+        .hero {{ background: var(--light); padding: 80px 5%; text-align: center; }}
+        .hero h1 {{ font-size: 2.8rem; margin: 0 0 15px 0; }}
+        .hero p {{ font-size: 1.2rem; color: #555; max-width: 700px; margin: 0 auto 35px auto; }}
+        .btn {{ background: var(--primary); color: white; padding: 20px 45px; text-decoration: none; border-radius: 50px; font-weight: 800; display: inline-block; box-shadow: 0 4px 15px rgba(255,77,109,0.3); font-size: 1.2rem; transition: transform 0.2s; }}
+        .btn:hover {{ transform: scale(1.05); }}
+        .features {{ display: flex; justify-content: center; flex-wrap: wrap; gap: 25px; margin-top: 40px; font-size: 0.95rem; color: #444; }}
+        .city-content {{ padding: 60px 5%; max-width: 900px; margin: auto; }}
+        footer {{ background: #eee; padding: 50px 5%; text-align: center; font-size: 0.85rem; color: #666; }}
+        .footer-links a {{ color: var(--primary); text-decoration: none; margin: 0 10px; font-weight: 600; }}
+        @media (max-width: 768px) {{ .hero h1 {{ font-size: 2.1rem; }} }}
     </style>
 </head>
 <body>
-    <div class="vulture-card">
-        <span class="badge">Live Inventory: {city} Verified</span>
-        <h1>{title_hook}</h1>
-        <div class="timer-box">PANIC WINDOW: Only 4 hours left for same-day delivery in {city}.</div>
-        <a href="{MANYCHAT_LINK}" class="cta">CHECK {city.upper()} STOCK NOW</a>
-        <div class="footer"><strong>Transparency:</strong> We are an independent affiliate. When you order in {city} via our links, we may earn a commission.</div>
-    </div>
+    <div class="panic-bar">🌷 MOTHER'S DAY DEADLINE: MAY 10, 2026 — ORDER FOR {city.upper()} TODAY</div>
+
+    <nav>
+        <a href="../index.html" class="logo">SameDayFlowers</a>
+        <div style="font-weight:bold; color: #888;">{city}, {state.upper()}</div>
+    </nav>
+
+    <header class="hero">
+        <h1>Send Mother's Day Flowers in {city}</h1>
+        <p>Premium arrangements from local {city} area florists. Guaranteed fresh and hand-delivered. $0 Hidden Fees.</p>
+        <a href="{MANYCHAT_LINK}" class="btn">VIEW {city.upper()} BOUQUETS</a>
+        
+        <div class="features">
+            <span>✅ <strong>Free</strong> Same-Day Delivery</span>
+            <span>✅ <strong>$0</strong> Service Fees</span>
+            <span>✅ <strong>100%</strong> Freshness Guarantee</span>
+        </div>
+    </header>
+
+    <main class="city-content">
+        <h2>Local Delivery Information for {city}, {state}</h2>
+        <p>Looking for a reliable florist in {city}? We specialize in last-minute Mother's Day arrangements, including premium roses, peonies, and tulips. Our local {city} partners are standing by to ensure your gift is delivered on time.</p>
+        <p><strong>Service Area Includes:</strong> {city} and surrounding zip codes in the {state} region.</p>
+    </main>
+
+    <footer>
+        <div class="footer-links">
+            <a href="../index.html">Home</a>
+            <a href="../llms.txt">AI Index</a>
+            <a href="../sitemap.xml">Sitemap</a>
+        </div>
+        <br>
+        <p>© 2026 SameDayFlowers · Localized {city} Dispatch<br>
+        <strong>Disclaimer:</strong> We are an affiliate network. Commissions may be earned at no cost to you.</p>
+    </footer>
 </body>
 </html>"""
     
-    with open(os.path.join(PROJECT_DIR, filename), "w", encoding="utf-8") as f:
+    file_path = os.path.join(PROJECT_DIR, filename)
+    with open(file_path, "w", encoding="utf-8") as f:
         f.write(html_content)
     return filename
 
-def update_blog_feed(new_files, block_name):
-    """Updates blog.html for internal linking and bot crawling."""
-    links_html = "".join([f'<li><a href="{PROJECT_DIR}/{f}">{f.replace("-", " ").replace(".html", "").title()}</a></li>' for f in new_files[:200]])
-    feed_content = f"""<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Dispatch Hub - {block_name}</title>
-    <style>body{{font-family:sans-serif;background:#0a192f;color:#ccd6f6;padding:50px;}}
-    ul{{display:grid;grid-template-columns:repeat(auto-fill, minmax(200px, 1fr));gap:10px;padding:0;list-style:none;}}
-    a{{color:#8892b0;text-decoration:none;font-size:0.8rem;}}a:hover{{color:#64ffda;}}</style></head>
-    <body><h1>Latest Dispatch: {block_name}</h1><ul>{links_html}</ul></body></html>"""
-    with open("blog.html", "w", encoding="utf-8") as f:
-        f.write(feed_content)
-
+# --- 3. AI ROADMAP GENERATOR ---
 def update_llms_txt(cities_list):
-    """Generates the llms.txt discovery file for AI Agents (GPT/Gemini)."""
-    header = f"# AI Discovery Index - Mother's Day 2026\n# Affiliate: {LLMS_AFF_LINK}\n\n## Local Hubs\n"
+    header = f"# AI Discovery Index - Mother's Day 2026\n# Primary Affiliate: {LLMS_AFF_LINK}\n\n## Local Service Hubs\n"
     body = ""
-    for c in cities_list[:50]:
+    for c in cities_list[:250]: # List top 250 for LLM context
         filename = f"flowers-{c['city'].lower().replace(' ', '-')}-{c['state'].lower()}.html"
         body += f"- {c['city']}, {c['state']}: {BASE_URL}/{PROJECT_DIR}/{filename}\n"
+    
     with open("llms.txt", "w", encoding="utf-8") as f:
         f.write(header + body + f"\n## Full Sitemap\n{BASE_URL}/sitemap.xml")
-
-def update_sitemap():
-    today = datetime.date.today().isoformat()
-    all_files = [f for f in os.listdir(PROJECT_DIR) if f.endswith('.html')]
-    with open("sitemap.xml", "w", encoding="utf-8") as f:
-        f.write('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n')
-        for name in all_files:
-            f.write(f'  <url><loc>{BASE_URL}/{PROJECT_DIR}/{name}</loc><lastmod>{today}</lastmod></url>\n')
-        f.write('</urlset>')
-    return all_files
-
-def ping_index_now(filenames):
-    url_list = [f"{BASE_URL}/{PROJECT_DIR}/{f}" for f in filenames[:1000]]
-    data = {"host": BASE_URL.replace("https://", ""), "key": INDEX_NOW_KEY, "urlList": url_list}
-    req = urllib.request.Request("https://www.bing.com/indexnow", data=json.dumps(data).encode('utf-8'), headers={'Content-Type': 'application/json'})
-    try:
-        with urllib.request.urlopen(req) as response:
-            if response.status == 200: print("✅ IndexNow Success.")
-    except: print("❌ IndexNow Failed.")
 
 # --- 4. EXECUTION ---
 if __name__ == "__main__":
     if not os.path.exists(PROJECT_DIR): os.makedirs(PROJECT_DIR)
-    with open('cities.json', 'r') as f:
-        cities = json.load(f)[2000:4000] # Adjust slice per repo
-
-    print(f"🚀 Vulture Engine: Generating {len(cities)} pages...")
-    new_page_names = [generate_page_html(c['city'], c['state']) for c in cities]
     
-    update_blog_feed(new_page_names, "Block 2k-4k")
+    with open('cities.json', 'r') as f:
+        cities = json.load(f)[0:1000] # Adjust per repository slice
+
+    print(f"🚀 Deploying {len(cities)} SEO/GEO Pages + AI Discovery...")
+    for c in cities:
+        generate_page_html(c['city'], c['state'])
+    
     update_llms_txt(cities)
-    update_sitemap()
-    ping_index_now(new_page_names)
-    print("✅ Full Deploy Cycle Complete.")
+    print("✅ Vulture Master Engine Cycle Complete.")
