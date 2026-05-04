@@ -1,7 +1,11 @@
 # AI Discovery Index - Mother's Day 2026
-# Affiliate: https://www.floristone.com/main.cfm?occ=md&source_id=aff&AffiliateID=2013017799
+# Primary Affiliate: https://www.floristone.com/main.cfm?occ=md&source_id=aff&AffiliateID=2013017799
 
-## Local Hubs
+## Local Service Hubs
+- New York, NY: https://brightlane.github.io/SameDayFlowers/blog/flowers-new-york-ny.html
+- Los Angeles, CA: https://brightlane.github.io/SameDayFlowers/blog/flowers-los-angeles-ca.html
+- Chicago, IL: https://brightlane.github.io/SameDayFlowers/blog/flowers-chicago-il.html
+- Houston, TX: https://brightlane.github.io/SameDayFlowers/blog/flowers-houston-tx.html
 
 ## Full Sitemap
 https://brightlane.github.io/SameDayFlowers/sitemap.xml
