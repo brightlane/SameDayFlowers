@@ -1,0 +1,6 @@
+[
+  {"city": "New York", "state": "NY"},
+  {"city": "Los Angeles", "state": "CA"},
+  {"city": "Chicago", "state": "IL"},
+  ... up to 10,000 cities ...
+]
