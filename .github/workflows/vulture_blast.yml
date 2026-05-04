@@ -1,15 +1,22 @@
-name: Vulture 10K Daily Engine
+name: Same Day Flowers Daily Engine
 
 on:
   schedule:
-    - cron: '0 5 * * *' # Automated daily run
-  workflow_dispatch: # Manual "Go Go Go" button
+    # Triggers daily at 05:00 UTC (12:00 AM EST)
+    - cron: '0 5 * * *'
+  workflow_dispatch:
+    # Manual "Go Go Go" trigger button in GitHub Actions tab
+    inputs:
+      reason:
+        description: 'Reason for manual blast'
+        required: false
+        default: 'Manual Vulture Sync'
 
 permissions:
   contents: write
 
 jobs:
-  execute-vulture-protocol:
+  build-and-broadcast:
     runs-on: ubuntu-latest
     
     steps:
@@ -20,32 +27,45 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.10'
-          cache: 'pip'
+          cache: 'pip' # Speeds up daily runs
 
-      - name: Install Dependencies
+      - name: Execute Vulture Protocol
         run: |
+          # 1. Environment Preparation
           python -m pip install --upgrade pip
-          # This line makes it function across all repos:
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-          # Force install requests just in case requirements.txt is missing
-          pip install requests 
+          pip install requests # Hard-coded fail-safe for the blast script
 
-      - name: Run Vulture Core
-        run: |
-          # Use 'python' for environment consistency
-          if [ -f vulture_generator.py ]; then python vulture_generator.py; fi
-          if [ -f sdf_bing_blast.py ]; then python sdf_bing_blast.py; fi
-          # If other repos use different script names, add them here:
-          if [ -f blast_to_bing.py ]; then python blast_to_bing.py; fi
+          # 2. Sequential Execution (Only runs files if they exist in the repo)
+          echo "🚀 Starting Vulture Sequence..."
+          
+          if [ -f vulture_generator.py ]; then 
+            echo "Running Page Generator..."
+            python vulture_generator.py
+          fi
+          
+          if [ -f generate_llms_txt.py ]; then 
+            echo "Generating AI Context (llms.txt)..."
+            python generate_llms_txt.py
+          fi
+          
+          if [ -f sdf_bing_blast.py ]; then 
+            echo "Broadcasting to IndexNow (Cities 2001-4000)..."
+            python sdf_bing_blast.py
+          fi
 
-      - name: Sync and Push
+      - name: Sync and Commit Changes
         run: |
           git config --global user.name "Vulture-Bot"
           git config --global user.email "actions@github.com"
-          git add .
+          
+          # Add all generated assets
+          git add blog/ sitemap.xml llms.txt robots.txt index.html blog.html affiliate.json
+          
+          # Only commit if there are actual changes to prevent Action errors
           if [ -n "$(git status --porcelain)" ]; then
-            git commit -m "Vulture Engine Sync: $(date +'%Y-%m-%d')"
+            git commit -m "Vulture Engine Sync: $(date +'%Y-%m-%d %H:%M')"
             git push
           else
-            echo "No changes detected."
+            echo "No changes detected. Skipping commit."
           fi
