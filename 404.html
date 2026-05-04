@@ -5,22 +5,60 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Page Not Found | SameDayFlowers</title>
     <meta name="robots" content="noindex">
+    <!-- Auto-redirect to home after 10 seconds if they don't click anything -->
+    <meta http-equiv="refresh" content="10;url=https://brightlane.github.io/SameDayFlowers/">
     <style>
-        :root{--blue:#004b98;}
-        *{box-sizing:border-box;margin:0;padding:0;}
-        body{font-family:system-ui,sans-serif;background:#f9f9ff;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;text-align:center;padding:20px;}
-        .emoji{font-size:4rem;margin-bottom:16px;}
-        h1{font-size:2rem;font-weight:800;color:var(--blue);margin-bottom:8px;}
-        p{font-size:1rem;color:#666;margin-bottom:24px;max-width:400px;}
-        .btn{display:inline-block;background:var(--blue);color:#fff;padding:13px 30px;border-radius:99px;font-weight:700;font-size:1rem;text-decoration:none;margin:6px;}
-        .btn.outline{background:#fff;color:var(--blue);border:2px solid var(--blue);}
+        :root { --primary: #ff4757; --bg: #0a0b10; --card: #11141d; --text: #e0e0e0; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { 
+            font-family: system-ui, -apple-system, sans-serif; 
+            background: var(--bg); 
+            color: var(--text); 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            min-height: 100vh; 
+            text-align: center; 
+            padding: 20px; 
+        }
+        .container { background: var(--card); padding: 50px 30px; border-radius: 20px; border: 1px solid #1a1c23; max-width: 500px; }
+        .emoji { font-size: 4rem; margin-bottom: 16px; }
+        h1 { font-size: 2.2rem; font-weight: 800; color: #fff; margin-bottom: 12px; }
+        p { font-size: 1.1rem; color: #a4b0be; margin-bottom: 30px; line-height: 1.5; }
+        .btn { 
+            display: inline-block; 
+            background: var(--primary); 
+            color: #fff; 
+            padding: 16px 35px; 
+            border-radius: 99px; 
+            font-weight: 700; 
+            font-size: 1.1rem; 
+            text-decoration: none; 
+            margin: 10px; 
+            transition: transform 0.2s;
+            box-shadow: 0 10px 20px rgba(255, 71, 87, 0.2);
+        }
+        .btn:hover { transform: translateY(-3px); }
+        .btn.outline { 
+            background: transparent; 
+            color: var(--text); 
+            border: 2px solid #1a1c23; 
+            box-shadow: none;
+        }
     </style>
 </head>
 <body>
-    <div class="emoji">🌷</div>
-    <h1>Page Not Found</h1>
-    <p>The page you're looking for doesn't exist. Let's get you back to same day flowers.</p>
-    <a href="https://brightlane.github.io/SameDayFlowers/" class="btn">Go Home</a>
-    <a href="https://www.floristone.com/main.cfm?occ=md&source_id=aff&AffiliateID=21885" class="btn outline">Order Flowers Now</a>
+    <div class="container">
+        <div class="emoji">🥀</div>
+        <h1>Something Withered...</h1>
+        <p>We couldn't find that page, but we can still find you the perfect bouquet for same-day delivery.</p>
+        
+        <!-- FIXED AFFILIATE LINK -->
+        <a href="https://www.floristone.com/main.cfm?occ=md&source_id=aff&AffiliateID=2013017799" class="btn">Order Same-Day Flowers</a>
+        
+        <br>
+        <a href="https://brightlane.github.io/SameDayFlowers/" class="btn outline">Return to Homepage</a>
+    </div>
 </body>
 </html>
