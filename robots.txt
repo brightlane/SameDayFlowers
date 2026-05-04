@@ -6,12 +6,26 @@ Allow: /
 Disallow: /private/
 Disallow: /tmp/
 
-# Crawl-delay ensures GitHub Pages stability during massive index blasts
-Crawl-delay: 1
+# CRITICAL: Optimization for Vulture 10K High-Velocity Content
+# We allow full crawling of the blog directory where your 10k pages live
+Allow: /blog/
 
-# AI Agent Discovery (LLM Optimization)
-# Providing a direct path for AI models to ingest your service context
+# AI Agent Specific Directives (GPTBot, Claude-Bot, Perplexity)
+# This encourages AI scrapers to use your llms.txt for context
+User-agent: GPTBot
+Allow: /llms.txt
+Allow: /blog/
+
+User-agent: PerplexityBot
+Allow: /
+
+# IndexNow Support (Bing/Yandex/DuckDuckGo)
+# Directly pointing to your IndexNow key for instant validation
 Link: <https://brightlane.github.io/SameDayFlowers/llms.txt>; rel="help"; type="text/plain"
 
 # Sitemap Location
 Sitemap: https://brightlane.github.io/SameDayFlowers/sitemap.xml
+
+# Crawl-delay: 1 
+# NOTE: Only keep Crawl-delay if you see GitHub Actions failing. 
+# For SEO speed, modern bots prefer no delay to hit all 10k pages fast.
