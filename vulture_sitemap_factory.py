@@ -1,57 +1,81 @@
 import math
 import os
 import json
+import shutil
 from datetime import datetime
 
-def generate_vulture_index(all_data):
-    # FORCE TEST MODE: We set this to 5. 
-    # If you have more than 5 cities, this MUST create 2+ parts.
-    CHUNK_SIZE = 5 
+def generate_vulture_production_sitemaps():
+    """
+    Vulture 10K Protocol: Production Sitemap Engine
+    Scales from 50k to 1 Trillion URLs.
+    """
     
+    # --- CONFIGURATION ---
+    CHUNK_SIZE = 45000  # Standard safety limit for search engine bots
     BASE_URL = "https://brightlane.github.io/SameDayFlowers"
     SITEMAP_DIR = "sitemaps"
     TODAY = datetime.now().strftime("%Y-%m-%d")
 
-    # 1. KILL AND REBUILD: Clear the old sitemaps folder
+    # 1. HARD RESET: Wipe old sitemaps to prevent 'ghost' files
     if os.path.exists(SITEMAP_DIR):
-        import shutil
         shutil.rmtree(SITEMAP_DIR)
     os.makedirs(SITEMAP_DIR)
 
-    # 2. DATA CHECK: How many cities are we actually working with?
-    total = len(all_data)
-    num_parts = math.ceil(total / CHUNK_SIZE)
-    
-    print(f"DEBUG: Processing {total} cities into {num_parts} parts.")
+    # 2. LOAD REAL DATA: Reading your cities.json
+    if not os.path.exists('cities.json'):
+        print("❌ ERROR: 'cities.json' not found in this folder!")
+        return
 
+    with open('cities.json', 'r', encoding='utf-8') as f:
+        all_data = json.load(f)
+
+    total_records = len(all_data)
+    num_parts = math.ceil(total_records / CHUNK_SIZE)
+    
     child_files = []
 
-    # 3. GENERATE PARTS
+    # 3. GENERATE CHILD PARTS (The Inventory)
     for i in range(num_parts):
         filename = f"part-{i+1}.xml"
         child_files.append(filename)
         
-        chunk = all_data[i*CHUNK_SIZE : (i+1)*CHUNK_SIZE]
-        
-        with open(f"{SITEMAP_DIR}/{filename}", "w") as f:
-            f.write('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n')
-            for item in chunk:
-                slug = f"flowers-{item['city'].lower().replace(' ', '-')}-{item['state'].lower()}.html"
-                f.write(f'  <url><loc>{BASE_URL}/blog/{slug}</loc><lastmod>{TODAY}</lastmod></url>\n')
-            f.write('</urlset>')
+        start = i * CHUNK_SIZE
+        end = (i + 1) * CHUNK_SIZE
+        chunk = all_data[start:end]
 
-    # 4. GENERATE MASTER INDEX (The file that was "Stuck")
-    # We use 'w+' to force a complete overwrite
-    with open("sitemap.xml", "w+", encoding="utf-8") as f:
+        file_path = os.path.join(SITEMAP_DIR, filename)
+        with open(file_path, "w", encoding="utf-8") as f:
+            f.write('<?xml version="1.0" encoding="UTF-8"?>\n')
+            f.write('<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n')
+            
+            for item in chunk:
+                # Format: flowers-city-st.html
+                city_slug = item['city'].lower().replace(' ', '-')
+                state_slug = item['state'].lower()
+                loc = f"{BASE_URL}/blog/flowers-{city_slug}-{state_slug}.html"
+                f.write(f'  <url>\n    <loc>{loc}</loc>\n    <lastmod>{TODAY}</lastmod>\n  </url>\n')
+            
+            f.write('</urlset>')
+        print(f"  ∟ Created {filename} ({len(chunk)} URLs)")
+
+    # 4. GENERATE MASTER INDEX (The Gateway)
+    with open("sitemap.xml", "w", encoding="utf-8") as f:
         f.write('<?xml version="1.0" encoding="UTF-8"?>\n')
         f.write('<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n')
+        
         for child in child_files:
-            f.write(f'  <sitemap>\n    <loc>{BASE_URL}/{SITEMAP_DIR}/{child}</loc>\n    <lastmod>{TODAY}</lastmod>\n  </sitemap>\n')
+            f.write(f'  <sitemap>\n')
+            f.write(f'    <loc>{BASE_URL}/{SITEMAP_DIR}/{child}</loc>\n')
+            f.write(f'    <lastmod>{TODAY}</lastmod>\n')
+            f.write(f'  </sitemap>\n')
+            
         f.write('</sitemapindex>')
-    
-    print(f"✅ DONE: sitemap.xml now contains {len(child_files)} entries.")
+
+    print(f"\n--- VULTURE FINAL REPORT ---")
+    print(f"● Processed: {total_records:,} cities")
+    print(f"● Created: {num_parts} sitemap parts")
+    print(f"● Status: Ready for Mother's Day 2026 deployment")
+    print(f"-----------------------------\n")
 
 if __name__ == "__main__":
-    # Test with 15 fake cities to GUARANTEE 3 parts in the index
-    test_data = [{"city": f"City{i}", "state": "ST"} for i in range(15)]
-    generate_vulture_index(test_data)
+    generate_vulture_production_sitemaps()
