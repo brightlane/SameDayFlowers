@@ -1,25 +1,22 @@
 name: Vulture 10K Blast
 on:
   schedule:
-    - cron: '0 0 * * *' # Daily automated blast
-  workflow_dispatch:    # This IS the "Run Button" trigger
+    - cron: '0 0 * * *'
+  workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
-      contents: write   # Crucial for the 'push' step to work
+      contents: write
     steps:
       - uses: actions/checkout@v3
-      
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.10'
-          
       - name: Execute Vulture Generator
         run: python vulture_generator.py
-        
       - name: Commit and Push Changes
         run: |
           git config --global user.name "brightlane"
