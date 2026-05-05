@@ -1,56 +1,7 @@
-import os
-from datetime import datetime
-
-BASE_URL = "https://brightlane.github.io/SameDayFlowers"
-SITEMAP_DIR = "sitemaps"
-
-def get_sitemap_parts():
-    """
-    Auto-detect all sitemap parts in /sitemaps
-    """
-    if not os.path.exists(SITEMAP_DIR):
-        return []
-
-    parts = []
-    for file in sorted(os.listdir(SITEMAP_DIR)):
-        if file.startswith("part-") and file.endswith(".xml"):
-            parts.append(file)
-
-    return parts
-
-
-def generate_sitemap_index():
-    """
-    Auto builds sitemap.xml from all sitemap parts
-    """
-
-    today = datetime.utcnow().strftime("%Y-%m-%d")
-    parts = get_sitemap_parts()
-
-    if not parts:
-        print("⚠️ No sitemap parts found.")
-        return
-
-    xml = ['<?xml version="1.0" encoding="UTF-8"?>']
-    xml.append('<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">')
-
-    for part in parts:
-        url = f"{BASE_URL}/sitemaps/{part}"
-
-        xml.append("  <sitemap>")
-        xml.append(f"    <loc>{url}</loc>")
-        xml.append(f"    <lastmod>{today}</lastmod>")
-        xml.append("  </sitemap>")
-
-    xml.append("</sitemapindex>")
-
-    output = "\n".join(xml)
-
-    with open("sitemap.xml", "w", encoding="utf-8") as f:
-        f.write(output)
-
-    print(f"✅ Sitemap index built with {len(parts)} parts")
-
-
-if __name__ == "__main__":
-    generate_sitemap_index()
+<?xml version="1.0" encoding="UTF-8"?>
+<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <sitemap>
+    <loc>https://brightlane.github.io/SameDayFlowers/sitemaps/part-1.xml</loc>
+    <lastmod>2026-05-05</lastmod>
+  </sitemap>
+</sitemapindex>
