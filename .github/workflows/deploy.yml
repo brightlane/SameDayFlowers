@@ -4,8 +4,7 @@ on:
   push:
     branches:
       - main
-
-  workflow_dispatch:   # ✅ RUN BUTTON
+  workflow_dispatch:
 
 jobs:
   build:
@@ -20,27 +19,16 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Debug files
-        run: ls -R
-
       - name: Generate pages
         run: python vulture_generator_master.py
 
-      - name: Verify output exists
-        run: |
-          echo "BLOG FILES:"
-          ls blog || echo "NO BLOG FOLDER"
-          echo "SITEMAP:"
-          ls sitemaps || echo "NO SITEMAP"
+      - name: Submit to Bing IndexNow
+        run: python bing_indexnow_blast.py
 
-      # 🔥 CRITICAL STEP (THIS WAS MISSING)
       - name: Commit generated pages
         run: |
           git config user.name "github-actions"
           git config user.email "actions@github.com"
-
           git add blog sitemaps
-
-          git commit -m "auto deploy pages" || echo "No changes"
-
+          git commit -m "auto deploy pages" || echo "Nothing to commit"
           git push
