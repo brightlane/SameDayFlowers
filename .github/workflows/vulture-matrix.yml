@@ -11,6 +11,7 @@ permissions:
 jobs:
   run-vulture-matrix:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -18,31 +19,48 @@ jobs:
           fetch-depth: 0
 
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
-          python-version: '3.10'
+          python-version: '3.11'
 
       - name: Install Requirements
-        run: pip install requests
+        run: |
+          pip install --upgrade pip
+          pip install requests
 
       # Step 1: Build the 10k Pages
       - name: Build Pages
         run: python vulture_generator_master.py
 
-      # Step 2: Build the Trillion-Scale Sitemap Index
+      # Step 2: Build the Sitemap Index
       - name: Build Sitemaps
         run: python vulture_sitemap_factory.py
 
-      # Step 3: Blast Search Engines
+      # Step 3: Submit to IndexNow (FIXED)
       - name: IndexNow Blast
-        run: python vulture_index_blast.py
+        run: python bing_indexnow_blast.py
 
-      # Step 4: Sync back to GitHub
+      # Optional redundancy (recommended)
+      - name: Secondary Index Blast
+        run: python sdf_bing_blast.py
+
+      # Step 4: Verify output (debug safety)
+      - name: Verify Output
+        run: |
+          echo "BLOG:"
+          ls -R blog || echo "No blog folder"
+          echo "SITEMAPS:"
+          ls -R sitemaps || echo "No sitemap folder"
+
+      # Step 5: Commit + Push safely
       - name: Push Changes
         run: |
           git config --local user.email "bot@vulture.internal"
           git config --local user.name "Vulture-Bot"
+
           git add .
-          git commit -m "Vulture Sync: $(date +'%Y-%m-%d') [10K Protocol]" || exit 0
+
+          git commit -m "Vulture Sync: $(date +'%Y-%m-%d') [10K Protocol]" || echo "No changes to commit"
+
           git pull --rebase origin main
           git push origin main
